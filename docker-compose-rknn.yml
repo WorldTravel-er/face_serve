@@ -1,17 +1,17 @@
 services:
-  face-api-rknn:
+  face-serve-rknn:
     platform: linux/arm64
     build:
       context: .
-      dockerfile: Dockerfile.rknn
+      dockerfile: Dockerfile-rknn
       args:
         DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian}
         DEBIAN_SECURITY_MIRROR: ${DEBIAN_SECURITY_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian-security}
-    image: face-api-v2:rknn-2.3.2
-    container_name: face-api-rknn
+    image: face-serve:rknn-2.3.2
+    container_name: face-serve-rknn
     init: true
     ports:
-      - "${FACE_API_RKNN_HOST_PORT:-8001}:8000"
+      - "${FACE_API_RKNN_HOST_PORT:-8000}:8000"
     volumes:
       - ./runtime/data-rknn:/app/data/face_api
       - ./runtime/logs:/app/logs
