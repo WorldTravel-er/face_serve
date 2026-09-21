@@ -16,7 +16,7 @@ conda-env/
 # 模型权重 / 大数据文件
 *.pth
 *.pt
-*.onnx
+# *.onnx
 *.h5
 *.ckpt
 *.weights
