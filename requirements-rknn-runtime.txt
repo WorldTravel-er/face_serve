@@ -1,0 +1,13 @@
+# CPU-side runtime dependencies for native RK3588 deployment.
+numpy==1.26.4
+opencv-python==4.11.0.86
+onnxruntime==1.20.1
+pillow==11.3.0
+scikit-image==0.25.2
+lap==0.5.13
+fastapi==0.116.1
+pydantic>=2.10,<3
+uvicorn==0.35.0
+websockets==15.0.1
+psutil==7.2.2
+ruamel-yaml==0.19.1

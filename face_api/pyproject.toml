@@ -1,0 +1,19 @@
+[project]
+name = "face-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11, <=3.12"
+dependencies = [
+    "fastapi==0.116.1",
+    "pydantic>=2.13.4",
+    "uvicorn==0.35.0",
+    "websockets==15.0.1",
+]
+
+[project.scripts]
+face-api = "face_api:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"

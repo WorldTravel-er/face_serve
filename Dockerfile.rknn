@@ -1,0 +1,55 @@
+# RK3588 production image. Build on the board or with BuildKit targeting arm64.
+FROM python:3.11-slim-bookworm
+
+ARG TARGETARCH
+ARG DEBIAN_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian
+ARG DEBIAN_SECURITY_MIRROR=https://mirrors.tuna.tsinghua.edu.cn/debian-security
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_LINK_MODE=copy \
+    FACE_API_RUNTIME=rknn \
+    FACE_API_RKNN_DETECTOR_CORE_MASK=0 \
+    FACE_API_RKNN_RECOGNITION_CORE_MASK=1 \
+    FACE_API_RKNN_ALIGNER_FALLBACK=onnx-cpu \
+    LD_LIBRARY_PATH=/usr/lib
+
+WORKDIR /app
+
+RUN test "${TARGETARCH}" = "arm64" \
+    || { echo "Dockerfile.rknn requires --platform linux/arm64" >&2; exit 1; }
+
+RUN sed -ri \
+        "s|http://deb.debian.org/debian-security|${DEBIAN_SECURITY_MIRROR}|g; \
+         s|http://deb.debian.org/debian|${DEBIAN_MIRROR}|g" \
+        /etc/apt/sources.list.d/debian.sources \
+    && printf 'Acquire::Retries "5";\nAcquire::https::Timeout "30";\n' \
+        > /etc/apt/apt.conf.d/80-retries \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates ffmpeg libgl1 libglib2.0-0 libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install --no-cache-dir uv==0.12.17
+COPY pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --extra rknn --no-install-project
+
+COPY face_api ./face_api
+COPY face_core ./face_core
+COPY scripts ./scripts
+COPY run_demo.py ./
+
+RUN groupadd --gid 1000 faceapi \
+    && useradd --uid 1000 --gid 1000 --create-home --shell /usr/sbin/nologin faceapi \
+    && mkdir -p /app/data/face_api /app/logs \
+    && chown -R faceapi:faceapi /app/data /app/logs
+
+ENV PATH=/app/.venv/bin:$PATH
+USER faceapi
+
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=4)" || exit 1
+
+CMD ["python", "-m", "face_api.main", "--runtime", "rknn", "--host", "0.0.0.0", "--port", "8000", "--performance-log-enabled", "--performance-log-file", "logs/rknn_performance.jsonl"]

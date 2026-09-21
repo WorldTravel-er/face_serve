@@ -1,0 +1,44 @@
+services:
+  face-api-rknn:
+    platform: linux/arm64
+    build:
+      context: .
+      dockerfile: Dockerfile.rknn
+      args:
+        DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian}
+        DEBIAN_SECURITY_MIRROR: ${DEBIAN_SECURITY_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian-security}
+    image: face-api-v2:rknn-2.3.2
+    container_name: face-api-rknn
+    init: true
+    ports:
+      - "${FACE_API_RKNN_HOST_PORT:-8001}:8000"
+    volumes:
+      - ./runtime/data-rknn:/app/data/face_api
+      - ./runtime/logs:/app/logs
+      - ./models:/app/models:ro
+      - type: bind
+        source: ${RKNN_RUNTIME_LIBRARY:-/usr/lib/librknnrt.so}
+        target: /usr/lib/librknnrt.so
+        read_only: true
+        bind:
+          create_host_path: false
+    devices:
+      - "${RKNN_RENDER_DEVICE:-/dev/dri/renderD129}:/dev/dri/renderD129"
+    group_add:
+      - "${RKNN_RENDER_GID:?set RKNN_RENDER_GID from: getent group render | cut -d: -f3}"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      FACE_API_RUNTIME: rknn
+      FACE_API_RETINAFACE_RKNN: /app/models/rknn/retinaface-mobilenet0.25-480x720-int8.rknn
+      FACE_API_CVLFACE_RECOGNITION_RKNN: /app/models/rknn/recognition-int8.rknn
+      FACE_API_CVLFACE_ALIGNER_ONNX: /app/models/onnx/cvlface_dfa_mobilenet.onnx
+      FACE_API_RKNN_MANIFEST: /app/models/rknn/manifest.json
+      FACE_API_RKNN_DETECTOR_CORE_MASK: "0"
+      FACE_API_RKNN_RECOGNITION_CORE_MASK: "1"
+      FACE_API_RKNN_ALIGNER_FALLBACK: onnx-cpu
+      FACE_API_VIDEO_ANALYSIS_RECOGNITION_INTERVAL: "0.2"
+      FACE_API_VIDEO_ANALYSIS_RECOGNITION_QUEUE_SIZE: "64"
+    restart: unless-stopped

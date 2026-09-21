@@ -1,0 +1,24 @@
+services:
+  face-api-onnx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian}
+        DEBIAN_SECURITY_MIRROR: ${DEBIAN_SECURITY_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian-security}
+    image: face-api-v2:onnx-cpu
+    container_name: face-api-onnx
+    init: true
+    ports:
+      - "${FACE_API_ONNX_HOST_PORT:-8002}:8000"
+    volumes:
+      - ./runtime/data-onnx:/app/data/face_api
+      - ./runtime/logs:/app/logs
+      - ./models:/app/models:ro
+    environment:
+      FACE_API_RUNTIME: onnx
+      FACE_API_RETINAFACE_PROVIDER: cpu
+      FACE_API_RETINAFACE_ONNX: /app/models/onnx/Retinaface_mobilenet0.25.onnx
+      FACE_API_CVLFACE_RECOGNITION_ONNX: /app/models/onnx/cvlface_adaface_ir50_webface4m.onnx
+      FACE_API_CVLFACE_ALIGNER_ONNX: /app/models/onnx/cvlface_dfa_mobilenet.onnx
+    restart: unless-stopped
