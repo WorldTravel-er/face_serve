@@ -42,3 +42,17 @@ services:
       FACE_API_VIDEO_ANALYSIS_RECOGNITION_INTERVAL: "0.2"
       FACE_API_VIDEO_ANALYSIS_RECOGNITION_QUEUE_SIZE: "64"
     restart: unless-stopped
+    
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    container_name: autoheal
+    restart: unless-stopped
+
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal
+      AUTOHEAL_INTERVAL: "10"
+      AUTOHEAL_START_PERIOD: "60"
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: "10"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

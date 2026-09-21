@@ -22,3 +22,17 @@ services:
       FACE_API_CVLFACE_RECOGNITION_ONNX: /app/models/onnx/cvlface_adaface_ir50_webface4m.onnx
       FACE_API_CVLFACE_ALIGNER_ONNX: /app/models/onnx/cvlface_dfa_mobilenet.onnx
     restart: unless-stopped
+
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    container_name: autoheal
+    restart: unless-stopped
+
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal
+      AUTOHEAL_INTERVAL: "10"
+      AUTOHEAL_START_PERIOD: "60"
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: "10"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

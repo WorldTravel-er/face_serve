@@ -12,20 +12,13 @@ venv/
 env/
 ENV/
 conda-env/
+.env
 
 # 模型权重 / 大数据文件
 *.pth
 *.pt
-# *.onnx
-*.h5
-*.ckpt
-*.weights
-*.pb
-weights/
+*.onnx
 models/
-checkpoints/
-dataset/
-datasets/
 data/
 
 # 日志和缓存

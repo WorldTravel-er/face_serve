@@ -1,3 +1,0 @@
-# RK3588/aarch64 CPython 3.11 only. Install after requirements-rknn-runtime.txt.
-rknn-toolkit-lite2==2.3.2 \
-    --hash=sha256:bda74f1179e15fccb8726054a24898982522784b65bb340b20146955d254e800
