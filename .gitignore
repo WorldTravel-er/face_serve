@@ -20,7 +20,10 @@ conda-env/
 *.onnx
 models/
 data/
-
+*.db
+*.mp4
+*.png
+*.jpg
 # 日志和缓存
 *.log
 logs/
