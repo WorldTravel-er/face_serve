@@ -250,7 +250,7 @@ def run_case(args: argparse.Namespace) -> None:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Test all REST interfaces in the face recognition service.")
-    parser.add_argument("--base-url", default="http://127.0.0.1:8002", help="HTTP API base URL.")
+    parser.add_argument("--base-url", default="http://127.0.0.1:8000", help="HTTP API base URL.")
     parser.add_argument("--subject1-id", default=None, help="Optional fixed subject_id for the first test subject.")
     parser.add_argument("--subject1-name", default="rest-test-subject-1", help="Display name for subject1.")
     parser.add_argument("--subject1-updated-name", default="rest-test-subject-1-updated", help="Updated name for subject1.")

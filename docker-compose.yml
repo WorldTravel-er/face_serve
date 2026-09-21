@@ -1,16 +1,16 @@
 services:
-  face-api-onnx:
+  face-serve-onnx:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian}
         DEBIAN_SECURITY_MIRROR: ${DEBIAN_SECURITY_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian-security}
-    image: face-api-v2:onnx-cpu
-    container_name: face-api-onnx
+    image: face-serve:onnx-cpu
+    container_name: face-serve-onnx
     init: true
     ports:
-      - "${FACE_API_ONNX_HOST_PORT:-8002}:8000"
+      - "${FACE_API_ONNX_HOST_PORT:-8000}:8000"
     volumes:
       - ./runtime/data-onnx:/app/data/face_api
       - ./runtime/logs:/app/logs
