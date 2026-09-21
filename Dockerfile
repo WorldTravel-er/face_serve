@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_LINK_MODE=copy \
     FACE_API_RUNTIME=onnx \
-    FACE_API_RETINAFACE_PROVIDER=cpu
+    FACE_API_RETINAFACE_PROVIDER=cuda
 
 WORKDIR /app
 
@@ -47,4 +47,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/readyz', timeout=4)" || exit 1
 
-CMD ["python", "-m", "face_api.main", "--runtime", "onnx", "--provider", "cpu", "--retinaface-provider", "cpu", "--host", "0.0.0.0", "--port", "8000", "--performance-log-enabled", "--performance-log-file", "logs/onnx_performance.jsonl"]
+CMD ["python", "-m", "face_api.main", "--runtime", "onnx", "--provider", "cuda", "--retinaface-provider", "cpu", "--host", "0.0.0.0", "--port", "8000", "--performance-log-enabled", "--performance-log-file", "logs/onnx_performance.jsonl", "--no-performance-log-stdout"]

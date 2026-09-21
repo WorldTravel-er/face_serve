@@ -6,18 +6,20 @@ services:
       args:
         DEBIAN_MIRROR: ${DEBIAN_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian}
         DEBIAN_SECURITY_MIRROR: ${DEBIAN_SECURITY_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/debian-security}
-    image: face-serve:onnx-cpu
+    image: face-serve:onnx-cuda
     container_name: face-serve-onnx
     init: true
     ports:
       - "${FACE_API_ONNX_HOST_PORT:-8000}:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./runtime/data-onnx:/app/data/face_api
       - ./runtime/logs:/app/logs
       - ./models:/app/models:ro
     environment:
       FACE_API_RUNTIME: onnx
-      FACE_API_RETINAFACE_PROVIDER: cpu
+      FACE_API_RETINAFACE_PROVIDER: cuda
       FACE_API_RETINAFACE_ONNX: /app/models/onnx/Retinaface_mobilenet0.25.onnx
       FACE_API_CVLFACE_RECOGNITION_ONNX: /app/models/onnx/cvlface_adaface_ir50_webface4m.onnx
       FACE_API_CVLFACE_ALIGNER_ONNX: /app/models/onnx/cvlface_dfa_mobilenet.onnx

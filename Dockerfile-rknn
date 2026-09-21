@@ -17,7 +17,7 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 RUN test "${TARGETARCH}" = "arm64" \
-    || { echo "Dockerfile.rknn requires --platform linux/arm64" >&2; exit 1; }
+    || { echo "Dockerfile-rknn requires --platform linux/arm64" >&2; exit 1; }
 
 RUN sed -ri \
         "s|http://deb.debian.org/debian-security|${DEBIAN_SECURITY_MIRROR}|g; \
@@ -33,7 +33,7 @@ RUN sed -ri \
 RUN python -m pip install --no-cache-dir uv==0.12.17
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev --extra rknn --no-install-project
+    uv sync --no-dev --extra rknn --no-install-project
 
 COPY face_api ./face_api
 COPY face_core ./face_core

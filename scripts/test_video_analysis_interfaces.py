@@ -1,21 +1,29 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
+import os
+import re
 import sys
+import threading
 import time
 import uuid
+from contextlib import contextmanager
 from dataclasses import dataclass
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urljoin, urlparse
-from urllib.request import Request, urlopen
+from urllib.request import ProxyHandler, Request, build_opener, urlopen
 
 from interface_test_logger import InterfacePacketLogger, default_log_path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_VIDEO_PATH = PROJECT_ROOT / "data" / "videos" / "cyy.mp4"
 VIDEO_TERMINAL_STATUSES = {"finished", "failed", "stopped"}
 VIDEO_ALLOWED_STATUSES = {"running", *VIDEO_TERMINAL_STATUSES}
 
@@ -24,6 +32,19 @@ VIDEO_ALLOWED_STATUSES = {"running", *VIDEO_TERMINAL_STATUSES}
 class ApiResult:
     status: int
     body: dict[str, Any]
+
+
+def open_url(request: Request, timeout: float) -> Any:
+    hostname = urlparse(request.full_url).hostname
+    is_loopback = hostname == "localhost"
+    if hostname:
+        try:
+            is_loopback = is_loopback or ipaddress.ip_address(hostname).is_loopback
+        except ValueError:
+            pass
+    if is_loopback:
+        return build_opener(ProxyHandler({})).open(request, timeout=timeout)
+    return urlopen(request, timeout=timeout)
 
 
 def request_json(
@@ -45,7 +66,7 @@ def request_json(
         logger.log_http_request(method=method, url=url, headers=headers, body=payload)
 
     try:
-        with urlopen(request, timeout=timeout) as response:
+        with open_url(request, timeout=timeout) as response:
             raw = response.read().decode("utf-8")
             body = json.loads(raw) if raw else {}
             if logger is not None:
@@ -83,6 +104,8 @@ def assert_envelope(step: str, body: dict[str, Any]) -> None:
 
 
 def assert_success(step: str, result: ApiResult) -> None:
+    if not 200 <= result.status < 300:
+        raise AssertionError(f"{step} expected HTTP 2xx, got HTTP {result.status}, body={result.body}")
     assert_envelope(step, result.body)
     if result.body.get("code") != 0:
         raise AssertionError(f"{step} expected code=0, got HTTP {result.status}, body={result.body}")
@@ -112,6 +135,128 @@ def validate_video_source_url(source_url: str) -> None:
     parsed = urlparse(source_url)
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise ValueError("--video-source-url must be an absolute http or https URL")
+
+
+class QuietVideoRequestHandler(SimpleHTTPRequestHandler):
+    _range: tuple[int, int] | None = None
+
+    def log_message(self, format: str, *args: Any) -> None:
+        return
+
+    def end_headers(self) -> None:
+        self.send_header("Accept-Ranges", "bytes")
+        super().end_headers()
+
+    def send_head(self) -> Any:
+        self._range = None
+        range_header = self.headers.get("Range")
+        if range_header is None:
+            return super().send_head()
+
+        path = self.translate_path(self.path)
+        if not os.path.isfile(path):
+            return super().send_head()
+
+        file_size = os.path.getsize(path)
+        byte_range = self._parse_range_header(range_header, file_size)
+        if byte_range is None:
+            self.send_response(416)
+            self.send_header("Content-Range", f"bytes */{file_size}")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return None
+
+        start, end = byte_range
+        handle = open(path, "rb")
+        try:
+            stat = os.fstat(handle.fileno())
+            self.send_response(206)
+            self.send_header("Content-Type", self.guess_type(path))
+            self.send_header("Content-Range", f"bytes {start}-{end}/{file_size}")
+            self.send_header("Content-Length", str(end - start + 1))
+            self.send_header("Last-Modified", self.date_time_string(stat.st_mtime))
+            self.end_headers()
+            handle.seek(start)
+            self._range = (start, end)
+            return handle
+        except Exception:
+            handle.close()
+            raise
+
+    def copyfile(self, source: Any, outputfile: Any) -> None:
+        if self._range is None:
+            super().copyfile(source, outputfile)
+            return
+
+        start, end = self._range
+        remaining = end - start + 1
+        while remaining > 0:
+            chunk = source.read(min(64 * 1024, remaining))
+            if not chunk:
+                break
+            try:
+                outputfile.write(chunk)
+            except (BrokenPipeError, ConnectionResetError):
+                break
+            remaining -= len(chunk)
+
+    @staticmethod
+    def _parse_range_header(value: str, file_size: int) -> tuple[int, int] | None:
+        match = re.fullmatch(r"bytes=(\d*)-(\d*)", value.strip())
+        if match is None or file_size <= 0:
+            return None
+
+        start_text, end_text = match.groups()
+        if not start_text and not end_text:
+            return None
+        if not start_text:
+            suffix_length = int(end_text)
+            if suffix_length <= 0:
+                return None
+            start = max(file_size - suffix_length, 0)
+            return start, file_size - 1
+
+        start = int(start_text)
+        if start >= file_size:
+            return None
+        end = int(end_text) if end_text else file_size - 1
+        if end < start:
+            return None
+        return start, min(end, file_size - 1)
+
+
+@contextmanager
+def prepared_video_source(
+    source_url: str | None,
+    *,
+    bind_host: str,
+    advertised_host: str,
+) -> Iterator[str]:
+    if source_url is not None:
+        validate_video_source_url(source_url)
+        yield source_url
+        return
+
+    video_path = DEFAULT_VIDEO_PATH.resolve()
+    if not video_path.is_file():
+        raise FileNotFoundError(f"default video file does not exist: {video_path}")
+
+    handler = partial(QuietVideoRequestHandler, directory=str(video_path.parent))
+    server = ThreadingHTTPServer((bind_host, 0), handler)
+    server_thread = threading.Thread(
+        target=server.serve_forever,
+        name="video-analysis-test-http-server",
+        daemon=True,
+    )
+    server_thread.start()
+    local_url = f"http://{advertised_host}:{server.server_port}/{quote(video_path.name)}"
+    print(f"[INFO] serving default video: {video_path} -> {local_url}")
+    try:
+        yield local_url
+    finally:
+        server.shutdown()
+        server.server_close()
+        server_thread.join(timeout=5.0)
 
 
 def assert_video_task_shape(
@@ -219,8 +364,22 @@ def run_case(args: argparse.Namespace) -> None:
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Test long-video analysis REST interfaces.")
-    parser.add_argument("--base-url", default="http://127.0.0.1:8003", help="HTTP API base URL.")
-    parser.add_argument("--video-source-url", default="https://vod.pipi.cn/fec9203cvodtransbj1251246104/6715a2145285890808041382798/v.f42906.mp4", help="HTTP/HTTPS video URL used to create an analysis task.")
+    parser.add_argument("--base-url", default="http://127.0.0.1:8000", help="HTTP API base URL.")
+    parser.add_argument(
+        "--video-source-url",
+        default=None,
+        help=f"Optional HTTP/HTTPS video URL. By default, serve and analyze {DEFAULT_VIDEO_PATH.relative_to(PROJECT_ROOT)}.",
+    )
+    parser.add_argument(
+        "--video-server-bind",
+        default="127.0.0.1",
+        help="Address used by the temporary local video server. Default: 127.0.0.1.",
+    )
+    parser.add_argument(
+        "--video-server-host",
+        default="host.docker.internal",
+        help="Video-server hostname sent to the API. Default targets an API running in Docker; use 127.0.0.1 for a host API.",
+    )
     parser.add_argument("--task-name", default=None, help="Optional fixed video analysis task_name.")
     parser.add_argument("--timeout", type=float, default=60.0, help="HTTP request timeout in seconds.")
     parser.add_argument("--log-dir", default="logs/interface_tests", help="Directory for packet log files.")
@@ -237,7 +396,13 @@ def main(argv: list[str] | None = None) -> int:
     print(f"[INFO] packet log: {args.packet_logger.log_path}")
     started_at = time.time()
     try:
-        run_case(args)
+        with prepared_video_source(
+            args.video_source_url,
+            bind_host=args.video_server_bind,
+            advertised_host=args.video_server_host,
+        ) as source_url:
+            args.video_source_url = source_url
+            run_case(args)
     except Exception as exc:
         print(f"[FAIL] {exc}", file=sys.stderr)
         return 1

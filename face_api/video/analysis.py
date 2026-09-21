@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import math
+import logging
 import queue
 import threading
 import time
@@ -13,14 +13,14 @@ from typing import Any, Callable, Iterator
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
-import cv2
-
 from face_api.core.errors import FaceApiError
+from face_api.video.pyav_reader import PyAVVideoReader
 from face_api.video.store import VideoAnalysisStore, VideoFaceRecord
 
 
-CaptureFactory = Callable[[str], Any]
+ReaderFactory = Callable[[str], Any]
 TrackerFactory = Callable[[], Any]
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -58,12 +58,13 @@ class VideoAnalysisProcessor:
         subject_store: Any,
         recognition_service: Any,
         tracker_factory: TrackerFactory,
-        capture_factory: CaptureFactory | None = None,
+        reader_factory: ReaderFactory | None = None,
         sample_interval_seconds: float = 1.0,
         threshold: float = 0.3,
         download_source_enabled: bool = False,
         download_dir: str | Path | None = None,
         recognition_queue_size: int = 32,
+        max_consecutive_decode_errors: int = 100,
     ) -> None:
         self.video_store = video_store
         self.subject_store = subject_store
@@ -71,7 +72,13 @@ class VideoAnalysisProcessor:
         if not callable(tracker_factory):
             raise ValueError("tracker_factory must be configured")
         self.tracker_factory = tracker_factory
-        self.capture_factory = capture_factory or cv2.VideoCapture
+        self.max_consecutive_decode_errors = max(int(max_consecutive_decode_errors or 1), 1)
+        self.reader_factory = reader_factory or (
+            lambda source: PyAVVideoReader(
+                source,
+                max_consecutive_errors=self.max_consecutive_decode_errors,
+            )
+        )
         self.sample_interval_seconds = max(float(sample_interval_seconds or 1.0), 0.001)
         self.threshold = float(threshold)
         self.download_source_enabled = bool(download_source_enabled)
@@ -140,7 +147,7 @@ class VideoAnalysisProcessor:
     def _analyze_source(self, task_name: str, source_url: str) -> list[VideoFaceRecord]:
         candidates = list(self.subject_store.list_feature_records(self.recognition_service.embedding_identity()))
         tracker = self.tracker_factory()
-        capture = self.capture_factory(source_url)
+        reader = self.reader_factory(source_url)
         tracks: dict[int, _TrackState] = {}
         tracks_lock = threading.Lock()
         recognition_errors: list[Exception] = []
@@ -157,75 +164,87 @@ class VideoAnalysisProcessor:
             recognition_worker.start()
         job_sequence = 0
         try:
-            if not capture.isOpened():
-                raise RuntimeError("Cannot open video source")
-            fps = float(capture.get(cv2.CAP_PROP_FPS) or 0.0)
-            if not math.isfinite(fps) or fps <= 0.0:
-                fps = 25.0
-            total_frames = int(capture.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
-            video_duration = total_frames / fps if total_frames > 0 and fps > 0.0 else 0.0
-            self.video_store.update_task_video_duration(task_name, video_duration)
-            self.video_store.update_task_progress(task_name, 0, total_frames)
-            last_progress_update = time.monotonic()
-            progress_update_interval = 1.0
-            sample_every = max(int(round(fps * self.sample_interval_seconds)), 1)
-            frame_index = 0
-            error_count = 0
+            with reader:
+                total_frames = reader.total_frames
+                self.video_store.update_task_video_duration(task_name, reader.duration_seconds)
+                self.video_store.update_task_progress(task_name, 0, total_frames)
+                last_progress_update = time.monotonic()
+                progress_update_interval = 1.0
+                processed_frames = 0
+                next_recognition_seconds: dict[int, float] = {}
 
-            def maybe_update_progress(force: bool = False) -> None:
-                nonlocal last_progress_update
-                now = time.monotonic()
-                if force or now - last_progress_update >= progress_update_interval:
-                    self.video_store.update_task_progress(task_name, frame_index, total_frames)
-                    last_progress_update = now
+                def maybe_update_progress(force: bool = False) -> None:
+                    nonlocal last_progress_update
+                    now = time.monotonic()
+                    if force or now - last_progress_update >= progress_update_interval:
+                        self.video_store.update_task_progress(task_name, processed_frames, total_frames)
+                        last_progress_update = now
 
-            while True:
-                ok, frame = capture.read()
-                if not ok:
-                    error_count += 1
-                    if error_count > 20:
-                        break
-                    continue
+                for decoded in reader.frames():
+                    frame = decoded.image
+                    frame_index = decoded.source_index
+                    seconds = decoded.timestamp_seconds
+                    processed_frames = max(processed_frames, frame_index + 1)
+                    tracked = self._track_nearest_with_performance(
+                        task_name=task_name,
+                        tracker=tracker,
+                        frame=frame,
+                        frame_seq=frame_index,
+                    )
+                    if tracked is not None and tracked.track_id is not None:
+                        track_id = int(tracked.track_id)
+                        with tracks_lock:
+                            state = tracks.get(track_id)
+                            if state is None:
+                                state = _TrackState(
+                                    track_id=track_id,
+                                    first_seconds=seconds,
+                                    last_seconds=seconds,
+                                )
+                                tracks[track_id] = state
+                            else:
+                                state.last_seconds = seconds
+                            state.hits += 1
 
-                tracked = self._track_nearest_with_performance(
-                    task_name=task_name,
-                    tracker=tracker,
-                    frame=frame,
-                    frame_seq=frame_index,
-                )
-                if tracked is not None and tracked.track_id is not None:
-                    track_id = int(tracked.track_id)
-                    seconds = frame_index / fps
-                    with tracks_lock:
-                        state = tracks.get(track_id)
-                        if state is None:
-                            state = _TrackState(
+                        next_seconds = next_recognition_seconds.get(track_id, 0.0)
+                        if recognition_queue is not None and seconds >= next_seconds:
+                            job = _RecognitionJob(
                                 track_id=track_id,
-                                first_seconds=seconds,
-                                last_seconds=seconds,
+                                frame_seq=frame_index,
+                                frame=self._copy_frame_for_recognition(frame),
+                                detection=tracked.detection,
+                                seconds=seconds,
+                                sequence=job_sequence,
                             )
-                            tracks[track_id] = state
-                        else:
-                            state.last_seconds = seconds
-                        state.hits += 1
+                            if self._enqueue_recognition_job(recognition_queue, job):
+                                job_sequence += 1
+                                next_recognition_seconds[track_id] = seconds + self.sample_interval_seconds
 
-                    if recognition_queue is not None and frame_index % sample_every == 0:
-                        job = _RecognitionJob(
-                            track_id=track_id,
-                            frame_seq=frame_index,
-                            frame=self._copy_frame_for_recognition(frame),
-                            detection=tracked.detection,
-                            seconds=seconds,
-                            sequence=job_sequence,
-                        )
-                        if self._enqueue_recognition_job(recognition_queue, job):
-                            job_sequence += 1
+                    maybe_update_progress()
 
-                frame_index += 1
-                maybe_update_progress()
-            maybe_update_progress(force=True)
+                if reader.stats.usable_frames <= 0:
+                    raise RuntimeError("Video contains no usable frames")
+                if total_frames > 0:
+                    processed_frames = total_frames
+                maybe_update_progress(force=True)
+                decode_issue_count = (
+                    reader.stats.corrupt_packets
+                    + reader.stats.decode_errors
+                    + reader.stats.corrupt_frames
+                )
+                log_decode_summary = logger.warning if decode_issue_count else logger.info
+                log_decode_summary(
+                    "Video decode summary: task=%s packets=%d corrupt_packets=%d "
+                    "decode_errors=%d decoded_frames=%d corrupt_frames=%d usable_frames=%d",
+                    task_name,
+                    reader.stats.packets_seen,
+                    reader.stats.corrupt_packets,
+                    reader.stats.decode_errors,
+                    reader.stats.decoded_frames,
+                    reader.stats.corrupt_frames,
+                    reader.stats.usable_frames,
+                )
         finally:
-            capture.release()
             if recognition_queue is not None and recognition_worker is not None:
                 self._stop_recognition_worker(recognition_queue, recognition_worker, recognition_errors)
 

@@ -71,6 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--video-analysis-max-concurrency", type=_positive_int, default=1, help="Maximum concurrent long-video analysis tasks.")
     parser.add_argument("--video-analysis-recognition-interval", type=_positive_float, default=float(os.environ.get("FACE_API_VIDEO_ANALYSIS_RECOGNITION_INTERVAL", "0.1")), help="Seconds between queued nearest-track recognition attempts during long-video analysis.")
     parser.add_argument("--video-analysis-recognition-queue-size", type=_positive_int, default=int(os.environ.get("FACE_API_VIDEO_ANALYSIS_RECOGNITION_QUEUE_SIZE", "32")), help="Maximum pending nearest-track recognition jobs during long-video analysis.")
+    parser.add_argument("--video-analysis-max-consecutive-decode-errors", type=_positive_int, default=int(os.environ.get("FACE_API_VIDEO_ANALYSIS_MAX_CONSECUTIVE_DECODE_ERRORS", "100")), help="Fail long-video analysis after this many consecutive corrupt packets, corrupt frames, or decode errors.")
     parser.add_argument("--video-analysis-download-source", action="store_true", help="Download HTTP/HTTPS video sources before long-video analysis.")
     parser.add_argument("--live-stream-url", default="rtsp://192.168.3.78:8554/camera", help="Video source consumed by live recognition, such as a v4l2loopback /dev/video device, RTSP URL, video file, or camera index. Default: /dev/video10.")
 
@@ -187,6 +188,7 @@ def main() -> None:
         video_analysis_max_concurrency=args.video_analysis_max_concurrency,
         video_analysis_recognition_interval_seconds=args.video_analysis_recognition_interval,
         video_analysis_recognition_queue_size=args.video_analysis_recognition_queue_size,
+        video_analysis_max_consecutive_decode_errors=args.video_analysis_max_consecutive_decode_errors,
         video_analysis_download_source_enabled=args.video_analysis_download_source,
         live_stream_url=args.live_stream_url,
         live_video_stream_id=args.live_video_stream_id,

@@ -41,6 +41,7 @@ class ApiConfig:
     video_analysis_max_concurrency: int = 1
     video_analysis_recognition_interval_seconds: float = 1.0
     video_analysis_recognition_queue_size: int = 32
+    video_analysis_max_consecutive_decode_errors: int = 100
     video_analysis_download_source_enabled: bool = False
     live_stream_url: str = "/dev/video10"
     live_video_stream_id: str | None = None

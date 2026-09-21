@@ -5,9 +5,10 @@ description = "RK3588 face recognition with RKNN detection/recognition and ONNX 
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [
+    "av",
     "numpy==1.26.4",
     "opencv-python==4.11.0.86",
-    "onnxruntime",
+    "onnxruntime-gpu",
     "pillow==11.3.0",
     "scikit-image==0.25.2",
     "lap==0.5.13",

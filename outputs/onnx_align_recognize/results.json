@@ -1,0 +1,3863 @@
+{
+  "models": {
+    "aligner": "/home/bazinga/face_serve/models/onnx/cvlface_dfa_mobilenet.onnx",
+    "recognizer": "/home/bazinga/face_serve/models/onnx/cvlface_adaface_ir50_webface4m.onnx"
+  },
+  "model_signatures": {
+    "aligner": {
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "inputs": [
+        {
+          "name": "image",
+          "shape": [
+            1,
+            3,
+            112,
+            112
+          ],
+          "type": "tensor(float)"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "aligned_image",
+          "shape": [
+            1,
+            3,
+            112,
+            112
+          ],
+          "type": "tensor(float)"
+        },
+        {
+          "name": "original_keypoints",
+          "shape": [
+            1,
+            5,
+            2
+          ],
+          "type": "tensor(float)"
+        },
+        {
+          "name": "aligned_keypoints",
+          "shape": [
+            1,
+            5,
+            2
+          ],
+          "type": "tensor(float)"
+        },
+        {
+          "name": "align_score",
+          "shape": [
+            1,
+            1
+          ],
+          "type": "tensor(float)"
+        },
+        {
+          "name": "theta",
+          "shape": [
+            1,
+            2,
+            3
+          ],
+          "type": "tensor(float)"
+        },
+        {
+          "name": "bbox",
+          "shape": [
+            1,
+            4
+          ],
+          "type": "tensor(float)"
+        }
+      ]
+    },
+    "recognizer": {
+      "providers": [
+        "CPUExecutionProvider"
+      ],
+      "inputs": [
+        {
+          "name": "image",
+          "shape": [
+            1,
+            3,
+            112,
+            112
+          ],
+          "type": "tensor(float)"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "embedding",
+          "shape": [
+            1,
+            512
+          ],
+          "type": "tensor(float)"
+        }
+      ]
+    }
+  },
+  "parameters": {
+    "data": "/home/bazinga/face_serve/data/test_data",
+    "aligner": "/home/bazinga/face_serve/models/onnx/cvlface_dfa_mobilenet.onnx",
+    "recognizer": "/home/bazinga/face_serve/models/onnx/cvlface_adaface_ir50_webface4m.onnx",
+    "output": "/home/bazinga/face_serve/outputs/onnx_align_recognize",
+    "provider": "cpu",
+    "align_score_threshold": 0.0,
+    "limit": 0,
+    "no_save_images": false
+  },
+  "summary": {
+    "images": 45,
+    "succeeded": 45,
+    "failures": 0,
+    "average_ms": {
+      "alignment": 7.068126865973075,
+      "recognition": 25.990901976991964
+    }
+  },
+  "results": [
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/gallery/cyy1.jpg",
+      "error": null,
+      "align_score": 0.998259961605072,
+      "original_keypoints_normalized": [
+        [
+          0.31392037868499756,
+          0.47918879985809326
+        ],
+        [
+          0.6683312058448792,
+          0.47921156883239746
+        ],
+        [
+          0.49066162109375,
+          0.666663646697998
+        ],
+        [
+          0.35673201084136963,
+          0.8166103363037109
+        ],
+        [
+          0.6203977465629578,
+          0.8171323537826538
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          35.159080505371094,
+          53.66914367675781
+        ],
+        [
+          74.85309600830078,
+          53.671695709228516
+        ],
+        [
+          54.9541015625,
+          74.66632843017578
+        ],
+        [
+          39.95398712158203,
+          91.46035766601562
+        ],
+        [
+          69.48455047607422,
+          91.5188217163086
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3216501772403717,
+          0.47051170468330383
+        ],
+        [
+          0.6775031685829163,
+          0.4668814539909363
+        ],
+        [
+          0.501042902469635,
+          0.6569274663925171
+        ],
+        [
+          0.3681139647960663,
+          0.8088646531105042
+        ],
+        [
+          0.6328577995300293,
+          0.806671142578125
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__gallery__cyy1.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__gallery__cyy1.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__gallery__cyy1.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/gallery/cyy2.jpg",
+      "error": null,
+      "align_score": 0.9992984533309937,
+      "original_keypoints_normalized": [
+        [
+          0.30816659331321716,
+          0.48734143376350403
+        ],
+        [
+          0.6893334984779358,
+          0.4961090385913849
+        ],
+        [
+          0.5067867040634155,
+          0.6604228019714355
+        ],
+        [
+          0.35777342319488525,
+          0.7868119478225708
+        ],
+        [
+          0.632310688495636,
+          0.7938385605812073
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          34.5146598815918,
+          54.58224105834961
+        ],
+        [
+          77.20535278320312,
+          55.564212799072266
+        ],
+        [
+          56.760108947753906,
+          73.96735382080078
+        ],
+        [
+          40.07062530517578,
+          88.12294006347656
+        ],
+        [
+          70.81879425048828,
+          88.90991973876953
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.30174586176872253,
+          0.48566558957099915
+        ],
+        [
+          0.6911302208900452,
+          0.48548799753189087
+        ],
+        [
+          0.5086840391159058,
+          0.6576257944107056
+        ],
+        [
+          0.35956743359565735,
+          0.790239155292511
+        ],
+        [
+          0.640040397644043,
+          0.7908378839492798
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__gallery__cyy2.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__gallery__cyy2.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__gallery__cyy2.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/gallery/cyy3.jpg",
+      "error": null,
+      "align_score": 0.9994066953659058,
+      "original_keypoints_normalized": [
+        [
+          0.3304409682750702,
+          0.47905436158180237
+        ],
+        [
+          0.6798438429832458,
+          0.48853665590286255
+        ],
+        [
+          0.49639472365379333,
+          0.6297497749328613
+        ],
+        [
+          0.36198487877845764,
+          0.7567601203918457
+        ],
+        [
+          0.6430681943893433,
+          0.7645420432090759
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          37.0093879699707,
+          53.65408706665039
+        ],
+        [
+          76.14250946044922,
+          54.71610641479492
+        ],
+        [
+          55.59621047973633,
+          70.53197479248047
+        ],
+        [
+          40.54230499267578,
+          84.75713348388672
+        ],
+        [
+          72.02363586425781,
+          85.62870788574219
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3103451430797577,
+          0.48963141441345215
+        ],
+        [
+          0.6890612840652466,
+          0.4910164475440979
+        ],
+        [
+          0.49393972754478455,
+          0.6486448645591736
+        ],
+        [
+          0.35157647728919983,
+          0.7896414995193481
+        ],
+        [
+          0.6562453508377075,
+          0.7909222841262817
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__gallery__cyy3.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__gallery__cyy3.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__gallery__cyy3.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/gallery/cyy4.jpg",
+      "error": null,
+      "align_score": 0.9983343482017517,
+      "original_keypoints_normalized": [
+        [
+          0.34085115790367126,
+          0.497890830039978
+        ],
+        [
+          0.6713086366653442,
+          0.4968577027320862
+        ],
+        [
+          0.4523329436779022,
+          0.6755256056785583
+        ],
+        [
+          0.369546115398407,
+          0.7692680358886719
+        ],
+        [
+          0.6779691576957703,
+          0.7668114900588989
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          38.175331115722656,
+          55.763771057128906
+        ],
+        [
+          75.18656921386719,
+          55.64806365966797
+        ],
+        [
+          50.66128921508789,
+          75.65886688232422
+        ],
+        [
+          41.389163970947266,
+          86.15802001953125
+        ],
+        [
+          75.93254852294922,
+          85.88288879394531
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3343372642993927,
+          0.4852224886417389
+        ],
+        [
+          0.6833780407905579,
+          0.4950149953365326
+        ],
+        [
+          0.4462262988090515,
+          0.6764999032020569
+        ],
+        [
+          0.3557050824165344,
+          0.7727776765823364
+        ],
+        [
+          0.6815214157104492,
+          0.7803412079811096
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__gallery__cyy4.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__gallery__cyy4.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__gallery__cyy4.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/1.png",
+      "error": null,
+      "align_score": 0.8355448842048645,
+      "original_keypoints_normalized": [
+        [
+          0.28499120473861694,
+          0.38103052973747253
+        ],
+        [
+          0.40136289596557617,
+          0.4204956889152527
+        ],
+        [
+          0.20939669013023376,
+          0.5320178270339966
+        ],
+        [
+          0.21106649935245514,
+          0.7019869685173035
+        ],
+        [
+          0.2992342710494995,
+          0.7284402847290039
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          51.86840057373047,
+          72.39579772949219
+        ],
+        [
+          73.04804992675781,
+          79.89418029785156
+        ],
+        [
+          38.110198974609375,
+          101.08338928222656
+        ],
+        [
+          38.41410446166992,
+          133.3775177001953
+        ],
+        [
+          54.460636138916016,
+          138.40365600585938
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.4466300308704376,
+          0.44369006156921387
+        ],
+        [
+          0.5934160351753235,
+          0.4496999680995941
+        ],
+        [
+          0.4108579456806183,
+          0.6423659324645996
+        ],
+        [
+          0.4701078236103058,
+          0.8367501497268677
+        ],
+        [
+          0.5801558494567871,
+          0.8373498916625977
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__1.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__1.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__1.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/10.png",
+      "error": null,
+      "align_score": 0.8361471891403198,
+      "original_keypoints_normalized": [
+        [
+          0.3473665118217468,
+          0.4689166247844696
+        ],
+        [
+          0.6527497172355652,
+          0.5092246532440186
+        ],
+        [
+          0.48349201679229736,
+          0.6496943831443787
+        ],
+        [
+          0.36297276616096497,
+          0.7671745419502258
+        ],
+        [
+          0.5834987759590149,
+          0.7990107536315918
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          38.2103157043457,
+          64.71049499511719
+        ],
+        [
+          71.8024673461914,
+          70.27300262451172
+        ],
+        [
+          53.184120178222656,
+          89.65782165527344
+        ],
+        [
+          39.927005767822266,
+          105.87008666992188
+        ],
+        [
+          64.18486785888672,
+          110.26348114013672
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.31824207305908203,
+          0.4651477634906769
+        ],
+        [
+          0.6746392846107483,
+          0.47082534432411194
+        ],
+        [
+          0.49878212809562683,
+          0.6548253297805786
+        ],
+        [
+          0.3758881092071533,
+          0.8059107661247253
+        ],
+        [
+          0.633616030216217,
+          0.813147246837616
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__10.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__10.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__10.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/11.png",
+      "error": null,
+      "align_score": 0.8556727170944214,
+      "original_keypoints_normalized": [
+        [
+          0.32116034626960754,
+          0.4706067144870758
+        ],
+        [
+          0.6369738578796387,
+          0.4626110792160034
+        ],
+        [
+          0.4744195342063904,
+          0.6376450657844543
+        ],
+        [
+          0.3734516501426697,
+          0.7848989963531494
+        ],
+        [
+          0.5998153686523438,
+          0.7783668637275696
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          31.15255355834961,
+          55.531593322753906
+        ],
+        [
+          61.78646469116211,
+          54.58810806274414
+        ],
+        [
+          46.01869583129883,
+          75.24211883544922
+        ],
+        [
+          36.22481155395508,
+          92.61808013916016
+        ],
+        [
+          58.182090759277344,
+          91.8472900390625
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32664164900779724,
+          0.46570950746536255
+        ],
+        [
+          0.6761339902877808,
+          0.4637128412723541
+        ],
+        [
+          0.4925388991832733,
+          0.6537922024726868
+        ],
+        [
+          0.3776664435863495,
+          0.8144795298576355
+        ],
+        [
+          0.6281872987747192,
+          0.8121622800827026
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__11.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__11.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__11.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/12.png",
+      "error": null,
+      "align_score": 0.8984778523445129,
+      "original_keypoints_normalized": [
+        [
+          0.3204002380371094,
+          0.4475820064544678
+        ],
+        [
+          0.6453690528869629,
+          0.4333181381225586
+        ],
+        [
+          0.4759199619293213,
+          0.5984302163124084
+        ],
+        [
+          0.38122719526290894,
+          0.7641858458518982
+        ],
+        [
+          0.6203214526176453,
+          0.7520303726196289
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          44.215232849121094,
+          81.01234436035156
+        ],
+        [
+          89.06092834472656,
+          78.43058013916016
+        ],
+        [
+          65.67695617675781,
+          108.31587219238281
+        ],
+        [
+          52.609352111816406,
+          138.31764221191406
+        ],
+        [
+          85.60436248779297,
+          136.11749267578125
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32610422372817993,
+          0.4697395861148834
+        ],
+        [
+          0.67795330286026,
+          0.4707583487033844
+        ],
+        [
+          0.4865157902240753,
+          0.640593945980072
+        ],
+        [
+          0.37581974267959595,
+          0.8149046301841736
+        ],
+        [
+          0.6347749829292297,
+          0.8138595819473267
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__12.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__12.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__12.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/13.png",
+      "error": null,
+      "align_score": 0.9896166324615479,
+      "original_keypoints_normalized": [
+        [
+          0.30954328179359436,
+          0.47266921401023865
+        ],
+        [
+          0.6511642932891846,
+          0.4821590483188629
+        ],
+        [
+          0.47484683990478516,
+          0.6500331163406372
+        ],
+        [
+          0.35443639755249023,
+          0.8063315153121948
+        ],
+        [
+          0.5917396545410156,
+          0.8138813972473145
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          38.073822021484375,
+          76.09974670410156
+        ],
+        [
+          80.09320831298828,
+          77.62760925292969
+        ],
+        [
+          58.40616226196289,
+          104.65533447265625
+        ],
+        [
+          43.59567642211914,
+          129.81936645507812
+        ],
+        [
+          72.78398132324219,
+          131.034912109375
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3211075961589813,
+          0.467821329832077
+        ],
+        [
+          0.6770828366279602,
+          0.4668762981891632
+        ],
+        [
+          0.49883168935775757,
+          0.6472434401512146
+        ],
+        [
+          0.37842056155204773,
+          0.8137871623039246
+        ],
+        [
+          0.6257252097129822,
+          0.814128041267395
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__13.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__13.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__13.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/14.png",
+      "error": null,
+      "align_score": 0.5682439208030701,
+      "original_keypoints_normalized": [
+        [
+          0.39722102880477905,
+          0.4360896646976471
+        ],
+        [
+          0.6624470353126526,
+          0.44663551449775696
+        ],
+        [
+          0.5275991559028625,
+          0.5894702672958374
+        ],
+        [
+          0.42472872138023376,
+          0.7339518070220947
+        ],
+        [
+          0.6195931434631348,
+          0.7424401640892029
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          53.624839782714844,
+          69.77434539794922
+        ],
+        [
+          89.43035125732422,
+          71.46168518066406
+        ],
+        [
+          71.22588348388672,
+          94.31524658203125
+        ],
+        [
+          57.33837890625,
+          117.43228912353516
+        ],
+        [
+          83.64507293701172,
+          118.7904281616211
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.33465099334716797,
+          0.45921650528907776
+        ],
+        [
+          0.6608574986457825,
+          0.46001529693603516
+        ],
+        [
+          0.501795768737793,
+          0.6416088938713074
+        ],
+        [
+          0.3820810317993164,
+          0.8237597346305847
+        ],
+        [
+          0.6217823624610901,
+          0.8252556920051575
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__14.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__14.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__14.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/15.png",
+      "error": null,
+      "align_score": 0.9427376985549927,
+      "original_keypoints_normalized": [
+        [
+          0.3561130464076996,
+          0.4438503384590149
+        ],
+        [
+          0.6473995447158813,
+          0.4425888955593109
+        ],
+        [
+          0.4867769777774811,
+          0.5940200686454773
+        ],
+        [
+          0.3921455442905426,
+          0.748218834400177
+        ],
+        [
+          0.6046559810638428,
+          0.7473526000976562
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          50.21194076538086,
+          71.45990753173828
+        ],
+        [
+          91.28333282470703,
+          71.2568130493164
+        ],
+        [
+          68.63555145263672,
+          95.6372299194336
+        ],
+        [
+          55.29252243041992,
+          120.4632339477539
+        ],
+        [
+          85.2564926147461,
+          120.32376861572266
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.33363479375839233,
+          0.4671933650970459
+        ],
+        [
+          0.6732718348503113,
+          0.4621987044811249
+        ],
+        [
+          0.4878110885620117,
+          0.6407169699668884
+        ],
+        [
+          0.37933221459388733,
+          0.821664035320282
+        ],
+        [
+          0.627117931842804,
+          0.8180831670761108
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__15.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__15.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__15.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/16.png",
+      "error": null,
+      "align_score": 0.8392140865325928,
+      "original_keypoints_normalized": [
+        [
+          0.3109060525894165,
+          0.4533618986606598
+        ],
+        [
+          0.6334061026573181,
+          0.45830944180488586
+        ],
+        [
+          0.46234142780303955,
+          0.6270053386688232
+        ],
+        [
+          0.35603705048561096,
+          0.7808023691177368
+        ],
+        [
+          0.5802179574966431,
+          0.7846949100494385
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          35.13238525390625,
+          63.017303466796875
+        ],
+        [
+          71.57489013671875,
+          63.705013275146484
+        ],
+        [
+          52.24458312988281,
+          87.15373992919922
+        ],
+        [
+          40.23218536376953,
+          108.53153228759766
+        ],
+        [
+          65.56462860107422,
+          109.07259368896484
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3266226351261139,
+          0.4645712077617645
+        ],
+        [
+          0.6746749877929688,
+          0.46318319439888
+        ],
+        [
+          0.493629515171051,
+          0.6487588286399841
+        ],
+        [
+          0.382144033908844,
+          0.8169093728065491
+        ],
+        [
+          0.624096691608429,
+          0.8164336085319519
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__16.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__16.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__16.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/17.png",
+      "error": null,
+      "align_score": 0.8674328923225403,
+      "original_keypoints_normalized": [
+        [
+          0.3041011691093445,
+          0.44306883215904236
+        ],
+        [
+          0.6364983320236206,
+          0.44682037830352783
+        ],
+        [
+          0.450822651386261,
+          0.6153663396835327
+        ],
+        [
+          0.3474748432636261,
+          0.7679982781410217
+        ],
+        [
+          0.5762075781822205,
+          0.7709757685661316
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          30.41011619567871,
+          60.70043182373047
+        ],
+        [
+          63.64983367919922,
+          61.214393615722656
+        ],
+        [
+          45.0822639465332,
+          84.30519104003906
+        ],
+        [
+          34.74748611450195,
+          105.21576690673828
+        ],
+        [
+          57.620758056640625,
+          105.6236801147461
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3258049488067627,
+          0.46913209557533264
+        ],
+        [
+          0.681218683719635,
+          0.46401119232177734
+        ],
+        [
+          0.48737356066703796,
+          0.6492762565612793
+        ],
+        [
+          0.38109439611434937,
+          0.8152686357498169
+        ],
+        [
+          0.6256764531135559,
+          0.8121680617332458
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__17.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__17.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__17.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/18.png",
+      "error": null,
+      "align_score": 0.8786046504974365,
+      "original_keypoints_normalized": [
+        [
+          0.3198044002056122,
+          0.4724120795726776
+        ],
+        [
+          0.6059759259223938,
+          0.4807572364807129
+        ],
+        [
+          0.4477369785308838,
+          0.6404371857643127
+        ],
+        [
+          0.3604447543621063,
+          0.7686979174613953
+        ],
+        [
+          0.5707938075065613,
+          0.7747385501861572
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          36.45770263671875,
+          62.830806732177734
+        ],
+        [
+          69.08125305175781,
+          63.940711975097656
+        ],
+        [
+          51.042015075683594,
+          85.17814636230469
+        ],
+        [
+          41.090702056884766,
+          102.23682403564453
+        ],
+        [
+          65.07049560546875,
+          103.04022979736328
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32983705401420593,
+          0.45915549993515015
+        ],
+        [
+          0.6710863709449768,
+          0.4651506245136261
+        ],
+        [
+          0.48466143012046814,
+          0.6576846837997437
+        ],
+        [
+          0.3823753893375397,
+          0.8117851614952087
+        ],
+        [
+          0.6332077980041504,
+          0.8160804510116577
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__18.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__18.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__18.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/19.png",
+      "error": null,
+      "align_score": 0.9333906769752502,
+      "original_keypoints_normalized": [
+        [
+          0.3417387902736664,
+          0.44095924496650696
+        ],
+        [
+          0.6552788019180298,
+          0.4638407528400421
+        ],
+        [
+          0.47936150431632996,
+          0.6288127303123474
+        ],
+        [
+          0.36901888251304626,
+          0.759996235370636
+        ],
+        [
+          0.5980165004730225,
+          0.7780995965003967
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          39.641700744628906,
+          60.411415100097656
+        ],
+        [
+          76.01234436035156,
+          63.54618453979492
+        ],
+        [
+          55.605934143066406,
+          86.14734649658203
+        ],
+        [
+          42.806190490722656,
+          104.1194839477539
+        ],
+        [
+          69.36991119384766,
+          106.59964752197266
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32655662298202515,
+          0.4618476331233978
+        ],
+        [
+          0.6726500391960144,
+          0.4648652672767639
+        ],
+        [
+          0.49101337790489197,
+          0.6585278511047363
+        ],
+        [
+          0.3790382444858551,
+          0.8104411959648132
+        ],
+        [
+          0.6319097876548767,
+          0.8141741156578064
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__19.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__19.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__19.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/2.png",
+      "error": null,
+      "align_score": 0.9440429210662842,
+      "original_keypoints_normalized": [
+        [
+          0.379794180393219,
+          0.49950462579727173
+        ],
+        [
+          0.6603010892868042,
+          0.5083248615264893
+        ],
+        [
+          0.5130934119224548,
+          0.6476874351501465
+        ],
+        [
+          0.41590195894241333,
+          0.7799533009529114
+        ],
+        [
+          0.6138153672218323,
+          0.7870279550552368
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          53.55097961425781,
+          81.41925048828125
+        ],
+        [
+          93.10245513916016,
+          82.85694885253906
+        ],
+        [
+          72.3461685180664,
+          105.57305145263672
+        ],
+        [
+          58.64217758178711,
+          127.13238525390625
+        ],
+        [
+          86.54796600341797,
+          128.28555297851562
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3238885700702667,
+          0.46592527627944946
+        ],
+        [
+          0.6747092604637146,
+          0.4664389193058014
+        ],
+        [
+          0.49599510431289673,
+          0.6460849046707153
+        ],
+        [
+          0.37950974702835083,
+          0.814990222454071
+        ],
+        [
+          0.6270653009414673,
+          0.8164165616035461
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__2.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__2.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__2.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/20.png",
+      "error": null,
+      "align_score": 0.7854877710342407,
+      "original_keypoints_normalized": [
+        [
+          0.33377647399902344,
+          0.421052485704422
+        ],
+        [
+          0.6307359933853149,
+          0.43432101607322693
+        ],
+        [
+          0.47425007820129395,
+          0.5799623131752014
+        ],
+        [
+          0.3748437166213989,
+          0.7257243990898132
+        ],
+        [
+          0.5901727080345154,
+          0.7358378767967224
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          38.38429260253906,
+          59.36840057373047
+        ],
+        [
+          72.53463745117188,
+          61.239261627197266
+        ],
+        [
+          54.53875732421875,
+          81.77468872070312
+        ],
+        [
+          43.10702896118164,
+          102.32714080810547
+        ],
+        [
+          67.86985778808594,
+          103.75314331054688
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32541683316230774,
+          0.4622814953327179
+        ],
+        [
+          0.6702919006347656,
+          0.46960946917533875
+        ],
+        [
+          0.49270185828208923,
+          0.6428238749504089
+        ],
+        [
+          0.38133540749549866,
+          0.8146281838417053
+        ],
+        [
+          0.6314219236373901,
+          0.8205129504203796
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__20.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__20.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__20.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/21.png",
+      "error": null,
+      "align_score": 0.24560481309890747,
+      "original_keypoints_normalized": [
+        [
+          0.39545145630836487,
+          0.41894006729125977
+        ],
+        [
+          0.5973703265190125,
+          0.46164077520370483
+        ],
+        [
+          0.4595775008201599,
+          0.5996711850166321
+        ],
+        [
+          0.3566456139087677,
+          0.66954505443573
+        ],
+        [
+          0.5002675652503967,
+          0.7015146613121033
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          56.945011138916016,
+          75.40921020507812
+        ],
+        [
+          86.02132415771484,
+          83.0953369140625
+        ],
+        [
+          66.17916107177734,
+          107.94081115722656
+        ],
+        [
+          51.35696792602539,
+          120.51811218261719
+        ],
+        [
+          72.03852844238281,
+          126.27263641357422
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.34967273473739624,
+          0.45142892003059387
+        ],
+        [
+          0.6526321172714233,
+          0.4372541904449463
+        ],
+        [
+          0.5078924894332886,
+          0.6846370697021484
+        ],
+        [
+          0.3874439597129822,
+          0.8221736550331116
+        ],
+        [
+          0.6035269498825073,
+          0.8143625259399414
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__21.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__21.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__21.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/22.png",
+      "error": null,
+      "align_score": 0.49841952323913574,
+      "original_keypoints_normalized": [
+        [
+          0.37193888425827026,
+          0.44004443287849426
+        ],
+        [
+          0.6830803751945496,
+          0.4485720992088318
+        ],
+        [
+          0.530729353427887,
+          0.6204647421836853
+        ],
+        [
+          0.4077635407447815,
+          0.7694821357727051
+        ],
+        [
+          0.6368009448051453,
+          0.7770530581474304
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          42.401031494140625,
+          54.125465393066406
+        ],
+        [
+          77.87116241455078,
+          55.17436981201172
+        ],
+        [
+          60.50314712524414,
+          76.3171615600586
+        ],
+        [
+          46.485042572021484,
+          94.64630126953125
+        ],
+        [
+          72.59530639648438,
+          95.57752990722656
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32835668325424194,
+          0.46121302247047424
+        ],
+        [
+          0.6655203104019165,
+          0.46137866377830505
+        ],
+        [
+          0.5055590867996216,
+          0.651950478553772
+        ],
+        [
+          0.37675052881240845,
+          0.8168957829475403
+        ],
+        [
+          0.6249811053276062,
+          0.8184183835983276
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__22.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__22.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__22.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/23.png",
+      "error": null,
+      "align_score": 0.7702213525772095,
+      "original_keypoints_normalized": [
+        [
+          0.3179553747177124,
+          0.44717517495155334
+        ],
+        [
+          0.6651121377944946,
+          0.4288749098777771
+        ],
+        [
+          0.5069013237953186,
+          0.6319231986999512
+        ],
+        [
+          0.3948366940021515,
+          0.8087152242660522
+        ],
+        [
+          0.6450530290603638,
+          0.7941594123840332
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          35.611000061035156,
+          57.68559646606445
+        ],
+        [
+          74.49256134033203,
+          55.32486343383789
+        ],
+        [
+          56.77294921875,
+          81.5180892944336
+        ],
+        [
+          44.221710205078125,
+          104.32426452636719
+        ],
+        [
+          72.24594116210938,
+          102.44656372070312
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32765430212020874,
+          0.4596867561340332
+        ],
+        [
+          0.6673808097839355,
+          0.46326518058776855
+        ],
+        [
+          0.5005382895469666,
+          0.6515417695045471
+        ],
+        [
+          0.38032469153404236,
+          0.8170577883720398
+        ],
+        [
+          0.6252699494361877,
+          0.8183049559593201
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__23.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__23.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__23.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/24.png",
+      "error": null,
+      "align_score": 0.8464369773864746,
+      "original_keypoints_normalized": [
+        [
+          0.33831948041915894,
+          0.37178701162338257
+        ],
+        [
+          0.6220996975898743,
+          0.3674212396144867
+        ],
+        [
+          0.46366310119628906,
+          0.4955616593360901
+        ],
+        [
+          0.3720492720603943,
+          0.6696609258651733
+        ],
+        [
+          0.5819175839424133,
+          0.6660832762718201
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          37.891780853271484,
+          51.67839431762695
+        ],
+        [
+          69.67516326904297,
+          51.07155227661133
+        ],
+        [
+          51.930267333984375,
+          68.88307189941406
+        ],
+        [
+          41.669517517089844,
+          93.08287048339844
+        ],
+        [
+          65.17476654052734,
+          92.58557891845703
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.33626484870910645,
+          0.4738728702068329
+        ],
+        [
+          0.6732268929481506,
+          0.46682292222976685
+        ],
+        [
+          0.4859248995780945,
+          0.6200319528579712
+        ],
+        [
+          0.37827739119529724,
+          0.8273782730102539
+        ],
+        [
+          0.627473771572113,
+          0.8217501044273376
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__24.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__24.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__24.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/25.png",
+      "error": null,
+      "align_score": 0.6987293362617493,
+      "original_keypoints_normalized": [
+        [
+          0.3229408860206604,
+          0.4117729663848877
+        ],
+        [
+          0.5411750078201294,
+          0.41505351662635803
+        ],
+        [
+          0.41147446632385254,
+          0.5541515946388245
+        ],
+        [
+          0.3423140048980713,
+          0.690217912197113
+        ],
+        [
+          0.5105187296867371,
+          0.6918243765830994
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          35.200557708740234,
+          55.589351654052734
+        ],
+        [
+          58.988075256347656,
+          56.0322265625
+        ],
+        [
+          44.85071563720703,
+          74.81046295166016
+        ],
+        [
+          37.312225341796875,
+          93.1794204711914
+        ],
+        [
+          55.646541595458984,
+          93.39629364013672
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3558703362941742,
+          0.45337942242622375
+        ],
+        [
+          0.6532174348831177,
+          0.4509952962398529
+        ],
+        [
+          0.48092740774154663,
+          0.6445252299308777
+        ],
+        [
+          0.39100024104118347,
+          0.8320249915122986
+        ],
+        [
+          0.6201526522636414,
+          0.8289316296577454
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__25.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__25.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__25.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/26.png",
+      "error": null,
+      "align_score": 0.23579061031341553,
+      "original_keypoints_normalized": [
+        [
+          0.3814281225204468,
+          0.38243961334228516
+        ],
+        [
+          0.6063275933265686,
+          0.37745457887649536
+        ],
+        [
+          0.49184927344322205,
+          0.528786838054657
+        ],
+        [
+          0.4175533950328827,
+          0.6603679060935974
+        ],
+        [
+          0.5855754613876343,
+          0.6563504338264465
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          46.53422927856445,
+          50.48202896118164
+        ],
+        [
+          73.97196960449219,
+          49.824005126953125
+        ],
+        [
+          60.005611419677734,
+          69.79986572265625
+        ],
+        [
+          50.94151306152344,
+          87.16856384277344
+        ],
+        [
+          71.4402084350586,
+          86.63825988769531
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3483235836029053,
+          0.4512437880039215
+        ],
+        [
+          0.6527060270309448,
+          0.4507014751434326
+        ],
+        [
+          0.49366632103919983,
+          0.6522678136825562
+        ],
+        [
+          0.389530211687088,
+          0.8282224535942078
+        ],
+        [
+          0.6169419884681702,
+          0.8274207711219788
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__26.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__26.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__26.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/27.png",
+      "error": null,
+      "align_score": 0.8122307062149048,
+      "original_keypoints_normalized": [
+        [
+          0.3284141421318054,
+          0.44827815890312195
+        ],
+        [
+          0.6711456775665283,
+          0.4487476646900177
+        ],
+        [
+          0.49831122159957886,
+          0.6263812184333801
+        ],
+        [
+          0.38514456152915955,
+          0.7877461910247803
+        ],
+        [
+          0.6268154382705688,
+          0.7880139350891113
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          43.35066604614258,
+          68.1382827758789
+        ],
+        [
+          88.59123229980469,
+          68.20964813232422
+        ],
+        [
+          65.77708435058594,
+          95.20994567871094
+        ],
+        [
+          50.839080810546875,
+          119.73741912841797
+        ],
+        [
+          82.73963928222656,
+          119.77812194824219
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32285207509994507,
+          0.46495553851127625
+        ],
+        [
+          0.6747974753379822,
+          0.46711069345474243
+        ],
+        [
+          0.4964483678340912,
+          0.6486772298812866
+        ],
+        [
+          0.37945088744163513,
+          0.8138290047645569
+        ],
+        [
+          0.6276191473007202,
+          0.8152836561203003
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__27.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__27.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__27.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/28.png",
+      "error": null,
+      "align_score": 0.6411727070808411,
+      "original_keypoints_normalized": [
+        [
+          0.37459656596183777,
+          0.4742422103881836
+        ],
+        [
+          0.6272715330123901,
+          0.45142659544944763
+        ],
+        [
+          0.5520673394203186,
+          0.6178146600723267
+        ],
+        [
+          0.446330189704895,
+          0.7624886631965637
+        ],
+        [
+          0.6358920335769653,
+          0.745058536529541
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          52.06892395019531,
+          78.72420501708984
+        ],
+        [
+          87.19074249267578,
+          74.93681335449219
+        ],
+        [
+          76.73735809326172,
+          102.55723571777344
+        ],
+        [
+          62.03989791870117,
+          126.5731201171875
+        ],
+        [
+          88.38899230957031,
+          123.67971801757812
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.33039480447769165,
+          0.45190319418907166
+        ],
+        [
+          0.6466659903526306,
+          0.4594309628009796
+        ],
+        [
+          0.5299248099327087,
+          0.6549156904220581
+        ],
+        [
+          0.3784325122833252,
+          0.8191735148429871
+        ],
+        [
+          0.6157498359680176,
+          0.8244327306747437
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__28.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__28.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__28.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/29.png",
+      "error": null,
+      "align_score": 0.40465348958969116,
+      "original_keypoints_normalized": [
+        [
+          0.4044646918773651,
+          0.52288818359375
+        ],
+        [
+          0.6222496628761292,
+          0.5286004543304443
+        ],
+        [
+          0.5253352522850037,
+          0.6982980370521545
+        ],
+        [
+          0.432136207818985,
+          0.7943906188011169
+        ],
+        [
+          0.5864515900611877,
+          0.7995343208312988
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          57.02952194213867,
+          90.45965576171875
+        ],
+        [
+          87.7372055053711,
+          91.4478759765625
+        ],
+        [
+          74.07227325439453,
+          120.80555725097656
+        ],
+        [
+          60.93120574951172,
+          137.42958068847656
+        ],
+        [
+          82.6896743774414,
+          138.31944274902344
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3433755338191986,
+          0.44410374760627747
+        ],
+        [
+          0.6448286175727844,
+          0.4442896544933319
+        ],
+        [
+          0.5167838931083679,
+          0.6824569702148438
+        ],
+        [
+          0.3912706971168518,
+          0.8186787366867065
+        ],
+        [
+          0.6049094200134277,
+          0.8203268051147461
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__29.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__29.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__29.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/3.png",
+      "error": null,
+      "align_score": 0.9668892025947571,
+      "original_keypoints_normalized": [
+        [
+          0.35352781414985657,
+          0.47839078307151794
+        ],
+        [
+          0.6516587734222412,
+          0.4779294431209564
+        ],
+        [
+          0.5031369924545288,
+          0.6355906128883362
+        ],
+        [
+          0.4040599763393402,
+          0.7764548063278198
+        ],
+        [
+          0.6132301092147827,
+          0.7757527232170105
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          42.7768669128418,
+          65.06114959716797
+        ],
+        [
+          78.8507080078125,
+          64.99840545654297
+        ],
+        [
+          60.87957763671875,
+          86.44032287597656
+        ],
+        [
+          48.891258239746094,
+          105.59785461425781
+        ],
+        [
+          74.20084381103516,
+          105.50237274169922
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32338568568229675,
+          0.4638543426990509
+        ],
+        [
+          0.6737646460533142,
+          0.4659128785133362
+        ],
+        [
+          0.49784085154533386,
+          0.6499067544937134
+        ],
+        [
+          0.38017287850379944,
+          0.8145914673805237
+        ],
+        [
+          0.6260037422180176,
+          0.815591037273407
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__3.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__3.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__3.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/30.png",
+      "error": null,
+      "align_score": 0.4003838300704956,
+      "original_keypoints_normalized": [
+        [
+          0.5311711430549622,
+          0.37696585059165955
+        ],
+        [
+          0.6615990996360779,
+          0.35201501846313477
+        ],
+        [
+          0.6831315755844116,
+          0.49503931403160095
+        ],
+        [
+          0.5985279083251953,
+          0.6825452446937561
+        ],
+        [
+          0.701291561126709,
+          0.6652847528457642
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          66.92756652832031,
+          59.560604095458984
+        ],
+        [
+          83.36148834228516,
+          55.61837387084961
+        ],
+        [
+          86.07457733154297,
+          78.2162094116211
+        ],
+        [
+          75.41452026367188,
+          107.84214782714844
+        ],
+        [
+          88.36273956298828,
+          105.114990234375
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.39838796854019165,
+          0.44663968682289124
+        ],
+        [
+          0.5681167840957642,
+          0.4429282546043396
+        ],
+        [
+          0.5648397207260132,
+          0.6278092265129089
+        ],
+        [
+          0.41830238699913025,
+          0.8461898565292358
+        ],
+        [
+          0.5515209436416626,
+          0.846288800239563
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__30.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__30.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__30.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/31.png",
+      "error": null,
+      "align_score": 0.2812924087047577,
+      "original_keypoints_normalized": [
+        [
+          0.3517064154148102,
+          0.38756248354911804
+        ],
+        [
+          0.5773164629936218,
+          0.4138951599597931
+        ],
+        [
+          0.42033830285072327,
+          0.546036958694458
+        ],
+        [
+          0.35333260893821716,
+          0.6600087285041809
+        ],
+        [
+          0.5239761471748352,
+          0.6787990927696228
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          46.07353973388672,
+          56.19655990600586
+        ],
+        [
+          75.62845611572266,
+          60.01479721069336
+        ],
+        [
+          55.06431579589844,
+          79.17536163330078
+        ],
+        [
+          46.28657150268555,
+          95.70126342773438
+        ],
+        [
+          68.64087677001953,
+          98.42586517333984
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.351041316986084,
+          0.4523880183696747
+        ],
+        [
+          0.6613799333572388,
+          0.4549880623817444
+        ],
+        [
+          0.4675699770450592,
+          0.6575680375099182
+        ],
+        [
+          0.39330652356147766,
+          0.8222378492355347
+        ],
+        [
+          0.6278700232505798,
+          0.8226738572120667
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__31.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__31.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__31.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/32.png",
+      "error": null,
+      "align_score": 0.40944474935531616,
+      "original_keypoints_normalized": [
+        [
+          0.3902184069156647,
+          0.4506429135799408
+        ],
+        [
+          0.6077759861946106,
+          0.4445045292377472
+        ],
+        [
+          0.5076431632041931,
+          0.6526868343353271
+        ],
+        [
+          0.41421857476234436,
+          0.7696894407272339
+        ],
+        [
+          0.569196879863739,
+          0.7655070424079895
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          46.43598937988281,
+          67.14579772949219
+        ],
+        [
+          72.3253402709961,
+          66.2311782836914
+        ],
+        [
+          60.40953826904297,
+          97.25033569335938
+        ],
+        [
+          49.29201126098633,
+          114.68372344970703
+        ],
+        [
+          67.73442840576172,
+          114.060546875
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3665587306022644,
+          0.4412398934364319
+        ],
+        [
+          0.6317206025123596,
+          0.43048572540283203
+        ],
+        [
+          0.5127640962600708,
+          0.6858142614364624
+        ],
+        [
+          0.40061599016189575,
+          0.8298723101615906
+        ],
+        [
+          0.5895084142684937,
+          0.8224436044692993
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__32.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__32.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__32.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/33.png",
+      "error": null,
+      "align_score": 0.33554989099502563,
+      "original_keypoints_normalized": [
+        [
+          0.3879071772098541,
+          0.4217250347137451
+        ],
+        [
+          0.6428237557411194,
+          0.4332525134086609
+        ],
+        [
+          0.5152022838592529,
+          0.5973663926124573
+        ],
+        [
+          0.41404932737350464,
+          0.7168484330177307
+        ],
+        [
+          0.5993194580078125,
+          0.7258577942848206
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          45.38513946533203,
+          64.9456558227539
+        ],
+        [
+          75.21038055419922,
+          66.72088623046875
+        ],
+        [
+          60.27866744995117,
+          91.99442291259766
+        ],
+        [
+          48.44377136230469,
+          110.39466094970703
+        ],
+        [
+          70.12037658691406,
+          111.78209686279297
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.33700084686279297,
+          0.4516471028327942
+        ],
+        [
+          0.6564972996711731,
+          0.45282861590385437
+        ],
+        [
+          0.5053676962852478,
+          0.6647613644599915
+        ],
+        [
+          0.3850317895412445,
+          0.8194854855537415
+        ],
+        [
+          0.6172705292701721,
+          0.8211339116096497
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__33.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__33.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__33.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/34.png",
+      "error": null,
+      "align_score": 0.3597604036331177,
+      "original_keypoints_normalized": [
+        [
+          0.4000498652458191,
+          0.3862229883670807
+        ],
+        [
+          0.6378653049468994,
+          0.3618989586830139
+        ],
+        [
+          0.563385546207428,
+          0.5192999839782715
+        ],
+        [
+          0.48173820972442627,
+          0.6809107065200806
+        ],
+        [
+          0.6680611968040466,
+          0.6618890762329102
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          49.20613479614258,
+          56.38855743408203
+        ],
+        [
+          78.45743560791016,
+          52.837249755859375
+        ],
+        [
+          69.29642486572266,
+          75.81779479980469
+        ],
+        [
+          59.25379943847656,
+          99.4129638671875
+        ],
+        [
+          82.17152404785156,
+          96.63580322265625
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.34052011370658875,
+          0.44670939445495605
+        ],
+        [
+          0.6380051374435425,
+          0.4610038101673126
+        ],
+        [
+          0.516962468624115,
+          0.6410406827926636
+        ],
+        [
+          0.3863069415092468,
+          0.8249295353889465
+        ],
+        [
+          0.6193730235099792,
+          0.8361729383468628
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__34.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__34.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__34.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/35.png",
+      "error": null,
+      "align_score": 0.9798533916473389,
+      "original_keypoints_normalized": [
+        [
+          0.2948012351989746,
+          0.44490575790405273
+        ],
+        [
+          0.6494304537773132,
+          0.41778239607810974
+        ],
+        [
+          0.47441720962524414,
+          0.5915307402610779
+        ],
+        [
+          0.37226343154907227,
+          0.7919537425041199
+        ],
+        [
+          0.6237342357635498,
+          0.7695704102516174
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          34.19694519042969,
+          65.4011459350586
+        ],
+        [
+          75.33393096923828,
+          61.41401290893555
+        ],
+        [
+          55.03239440917969,
+          86.95501708984375
+        ],
+        [
+          43.18255615234375,
+          116.41719818115234
+        ],
+        [
+          72.3531723022461,
+          113.1268539428711
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32547852396965027,
+          0.47229239344596863
+        ],
+        [
+          0.6778792142868042,
+          0.4705289900302887
+        ],
+        [
+          0.4926413893699646,
+          0.6298879981040955
+        ],
+        [
+          0.37752795219421387,
+          0.8207551836967468
+        ],
+        [
+          0.6276408433914185,
+          0.8163915276527405
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__35.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__35.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__35.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/36.png",
+      "error": null,
+      "align_score": 0.8663846254348755,
+      "original_keypoints_normalized": [
+        [
+          0.3348182141780853,
+          0.40067726373672485
+        ],
+        [
+          0.6423380970954895,
+          0.3649709224700928
+        ],
+        [
+          0.5064322352409363,
+          0.5225184559822083
+        ],
+        [
+          0.413034588098526,
+          0.7170658111572266
+        ],
+        [
+          0.6459845304489136,
+          0.687575101852417
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          40.178184509277344,
+          56.89617156982422
+        ],
+        [
+          77.08057403564453,
+          51.825870513916016
+        ],
+        [
+          60.77186965942383,
+          74.19762420654297
+        ],
+        [
+          49.564151763916016,
+          101.82334899902344
+        ],
+        [
+          77.51814270019531,
+          97.63566589355469
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3295062184333801,
+          0.46978726983070374
+        ],
+        [
+          0.6679869294166565,
+          0.4708395302295685
+        ],
+        [
+          0.5000426173210144,
+          0.6242836117744446
+        ],
+        [
+          0.3734564781188965,
+          0.8234001994132996
+        ],
+        [
+          0.6301759481430054,
+          0.8215454816818237
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__36.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__36.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__36.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/37.png",
+      "error": null,
+      "align_score": 0.9330075979232788,
+      "original_keypoints_normalized": [
+        [
+          0.3723442554473877,
+          0.423630028963089
+        ],
+        [
+          0.6398876309394836,
+          0.406011700630188
+        ],
+        [
+          0.5059130787849426,
+          0.5659934282302856
+        ],
+        [
+          0.42318642139434814,
+          0.699041485786438
+        ],
+        [
+          0.6211439371109009,
+          0.6843962073326111
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          33.510982513427734,
+          42.36300277709961
+        ],
+        [
+          57.58988571166992,
+          40.60116958618164
+        ],
+        [
+          45.53217697143555,
+          56.599342346191406
+        ],
+        [
+          38.08677673339844,
+          69.9041519165039
+        ],
+        [
+          55.9029541015625,
+          68.43962097167969
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3318946063518524,
+          0.46407800912857056
+        ],
+        [
+          0.6727415919303894,
+          0.46103546023368835
+        ],
+        [
+          0.49114444851875305,
+          0.6544152498245239
+        ],
+        [
+          0.3765377402305603,
+          0.817310631275177
+        ],
+        [
+          0.628849446773529,
+          0.8130168914794922
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__37.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__37.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__37.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/38.png",
+      "error": null,
+      "align_score": 0.9490681886672974,
+      "original_keypoints_normalized": [
+        [
+          0.35022926330566406,
+          0.4604465365409851
+        ],
+        [
+          0.657005250453949,
+          0.43978407979011536
+        ],
+        [
+          0.503317654132843,
+          0.6116628050804138
+        ],
+        [
+          0.41719692945480347,
+          0.7487073540687561
+        ],
+        [
+          0.6390340328216553,
+          0.7314589619636536
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          30.469945907592773,
+          52.030460357666016
+        ],
+        [
+          57.15945816040039,
+          49.69560241699219
+        ],
+        [
+          43.78863525390625,
+          69.1178970336914
+        ],
+        [
+          36.2961311340332,
+          84.60392761230469
+        ],
+        [
+          55.59596252441406,
+          82.65486145019531
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3223949372768402,
+          0.4676852822303772
+        ],
+        [
+          0.6807414293289185,
+          0.46984773874282837
+        ],
+        [
+          0.4874337613582611,
+          0.6565167307853699
+        ],
+        [
+          0.37563571333885193,
+          0.8084620833396912
+        ],
+        [
+          0.6349615454673767,
+          0.807344377040863
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__38.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__38.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__38.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/39.png",
+      "error": null,
+      "align_score": 0.9912415742874146,
+      "original_keypoints_normalized": [
+        [
+          0.2889052629470825,
+          0.43276816606521606
+        ],
+        [
+          0.6601333022117615,
+          0.39411652088165283
+        ],
+        [
+          0.4835670590400696,
+          0.6055744886398315
+        ],
+        [
+          0.3920116722583771,
+          0.7687878608703613
+        ],
+        [
+          0.665867269039154,
+          0.735796332359314
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          25.13475799560547,
+          48.03726577758789
+        ],
+        [
+          57.43159866333008,
+          43.74693298339844
+        ],
+        [
+          42.070335388183594,
+          67.21876525878906
+        ],
+        [
+          34.10501480102539,
+          85.33544921875
+        ],
+        [
+          57.93045425415039,
+          81.67339324951172
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3190383017063141,
+          0.46658724546432495
+        ],
+        [
+          0.6806873083114624,
+          0.47700050473213196
+        ],
+        [
+          0.48394542932510376,
+          0.6575648188591003
+        ],
+        [
+          0.37506696581840515,
+          0.8026622533798218
+        ],
+        [
+          0.6424297094345093,
+          0.8060413002967834
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__39.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__39.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__39.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/4.png",
+      "error": null,
+      "align_score": 0.8776766657829285,
+      "original_keypoints_normalized": [
+        [
+          0.343466579914093,
+          0.5216355919837952
+        ],
+        [
+          0.6636727452278137,
+          0.5223456025123596
+        ],
+        [
+          0.49870845675468445,
+          0.6897348761558533
+        ],
+        [
+          0.393837034702301,
+          0.8255614638328552
+        ],
+        [
+          0.6168823838233948,
+          0.8260663747787476
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          43.276790618896484,
+          79.28861236572266
+        ],
+        [
+          83.62276458740234,
+          79.39653015136719
+        ],
+        [
+          62.83726501464844,
+          104.8396987915039
+        ],
+        [
+          49.62346649169922,
+          125.48534393310547
+        ],
+        [
+          77.72718048095703,
+          125.56208801269531
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3198680281639099,
+          0.46764060854911804
+        ],
+        [
+          0.6801238059997559,
+          0.4673534035682678
+        ],
+        [
+          0.4950956702232361,
+          0.6562370657920837
+        ],
+        [
+          0.3775689899921417,
+          0.8094067573547363
+        ],
+        [
+          0.6285116076469421,
+          0.8092183470726013
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__4.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__4.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__4.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/40.png",
+      "error": null,
+      "align_score": 0.9954251646995544,
+      "original_keypoints_normalized": [
+        [
+          0.39960795640945435,
+          0.45278361439704895
+        ],
+        [
+          0.7620709538459778,
+          0.4352918267250061
+        ],
+        [
+          0.5906388759613037,
+          0.6054302453994751
+        ],
+        [
+          0.4460172951221466,
+          0.7824963331222534
+        ],
+        [
+          0.7268252968788147,
+          0.7693159580230713
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          36.76393127441406,
+          54.78681564331055
+        ],
+        [
+          70.11052703857422,
+          52.670310974121094
+        ],
+        [
+          54.338775634765625,
+          73.2570571899414
+        ],
+        [
+          41.033592224121094,
+          94.68205261230469
+        ],
+        [
+          66.86792755126953,
+          93.08723449707031
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.31983712315559387,
+          0.482135534286499
+        ],
+        [
+          0.6804089546203613,
+          0.4736626148223877
+        ],
+        [
+          0.5058937668800354,
+          0.6384989023208618
+        ],
+        [
+          0.3578472137451172,
+          0.8108773827552795
+        ],
+        [
+          0.6371809244155884,
+          0.8046817779541016
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__40.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__40.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__40.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/41.png",
+      "error": null,
+      "align_score": 0.5094237327575684,
+      "original_keypoints_normalized": [
+        [
+          0.33239853382110596,
+          0.4361584484577179
+        ],
+        [
+          0.6405425667762756,
+          0.4218684732913971
+        ],
+        [
+          0.48733702301979065,
+          0.5906329154968262
+        ],
+        [
+          0.39867061376571655,
+          0.7377191185951233
+        ],
+        [
+          0.6307231187820435,
+          0.7259697914123535
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          30.580665588378906,
+          47.5412712097168
+        ],
+        [
+          58.92991638183594,
+          45.983665466308594
+        ],
+        [
+          44.83500671386719,
+          64.37899017333984
+        ],
+        [
+          36.677696228027344,
+          80.41138458251953
+        ],
+        [
+          58.026527404785156,
+          79.13070678710938
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32482048869132996,
+          0.46401047706604004
+        ],
+        [
+          0.6736323237419128,
+          0.4718383848667145
+        ],
+        [
+          0.487641304731369,
+          0.6503586769104004
+        ],
+        [
+          0.3761594891548157,
+          0.8094344735145569
+        ],
+        [
+          0.6389142274856567,
+          0.8142145276069641
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__41.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__41.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__41.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 0.9999999403953552
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/5.png",
+      "error": null,
+      "align_score": 0.8849941492080688,
+      "original_keypoints_normalized": [
+        [
+          0.33413615822792053,
+          0.4973302185535431
+        ],
+        [
+          0.6502213478088379,
+          0.48505035042762756
+        ],
+        [
+          0.4849071800708771,
+          0.6628706455230713
+        ],
+        [
+          0.3888181149959564,
+          0.8090820908546448
+        ],
+        [
+          0.6127129793167114,
+          0.7993589043617249
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          40.764610290527344,
+          75.09686279296875
+        ],
+        [
+          79.3270034790039,
+          73.24259948730469
+        ],
+        [
+          59.15867614746094,
+          100.09346771240234
+        ],
+        [
+          47.43581008911133,
+          122.17139434814453
+        ],
+        [
+          74.75098419189453,
+          120.70319366455078
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32722949981689453,
+          0.4667982757091522
+        ],
+        [
+          0.6785249710083008,
+          0.46275827288627625
+        ],
+        [
+          0.48959365487098694,
+          0.6551598310470581
+        ],
+        [
+          0.37847647070884705,
+          0.8145697712898254
+        ],
+        [
+          0.6273431777954102,
+          0.8105701804161072
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__5.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__5.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__5.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/6.png",
+      "error": null,
+      "align_score": 0.9885787963867188,
+      "original_keypoints_normalized": [
+        [
+          0.28349384665489197,
+          0.5035208463668823
+        ],
+        [
+          0.6233100891113281,
+          0.47342586517333984
+        ],
+        [
+          0.4559732675552368,
+          0.6739150881767273
+        ],
+        [
+          0.36856117844581604,
+          0.8364766836166382
+        ],
+        [
+          0.6001049876213074,
+          0.8113519549369812
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          33.16878128051758,
+          75.02460479736328
+        ],
+        [
+          72.92727661132812,
+          70.54045104980469
+        ],
+        [
+          53.348873138427734,
+          100.41334533691406
+        ],
+        [
+          43.12165832519531,
+          124.63502502441406
+        ],
+        [
+          70.2122802734375,
+          120.89144134521484
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32579582929611206,
+          0.4641173481941223
+        ],
+        [
+          0.6792375445365906,
+          0.46397659182548523
+        ],
+        [
+          0.48829779028892517,
+          0.6556639671325684
+        ],
+        [
+          0.38329437375068665,
+          0.815480649471283
+        ],
+        [
+          0.6245425939559937,
+          0.8106180429458618
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__6.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__6.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__6.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/7.png",
+      "error": null,
+      "align_score": 0.9769362807273865,
+      "original_keypoints_normalized": [
+        [
+          0.34227287769317627,
+          0.4797583222389221
+        ],
+        [
+          0.6621298789978027,
+          0.458159476518631
+        ],
+        [
+          0.5089294910430908,
+          0.6331302523612976
+        ],
+        [
+          0.41803479194641113,
+          0.7900782227516174
+        ],
+        [
+          0.643186092376709,
+          0.7719419002532959
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          39.70365524291992,
+          73.40302276611328
+        ],
+        [
+          76.80706787109375,
+          70.09839630126953
+        ],
+        [
+          59.03582000732422,
+          96.86892700195312
+        ],
+        [
+          48.492034912109375,
+          120.88196563720703
+        ],
+        [
+          74.60958862304688,
+          118.10710906982422
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3225440979003906,
+          0.46530529856681824
+        ],
+        [
+          0.6769419312477112,
+          0.46892404556274414
+        ],
+        [
+          0.4930824637413025,
+          0.648641049861908
+        ],
+        [
+          0.3794415295124054,
+          0.8138353228569031
+        ],
+        [
+          0.6291580200195312,
+          0.8131503462791443
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__7.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__7.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__7.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/8.png",
+      "error": null,
+      "align_score": 0.9187735915184021,
+      "original_keypoints_normalized": [
+        [
+          0.31452426314353943,
+          0.4787738025188446
+        ],
+        [
+          0.6394238471984863,
+          0.4805704951286316
+        ],
+        [
+          0.48317885398864746,
+          0.6409468054771423
+        ],
+        [
+          0.374269962310791,
+          0.8038772940635681
+        ],
+        [
+          0.6000988483428955,
+          0.8048058152198792
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          39.001007080078125,
+          73.25238800048828
+        ],
+        [
+          79.28855895996094,
+          73.52728271484375
+        ],
+        [
+          59.91417694091797,
+          98.06485748291016
+        ],
+        [
+          46.40947723388672,
+          122.99322509765625
+        ],
+        [
+          74.4122543334961,
+          123.13529205322266
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.3210001289844513,
+          0.46390825510025024
+        ],
+        [
+          0.6718503832817078,
+          0.4697413444519043
+        ],
+        [
+          0.5011937618255615,
+          0.6410659551620483
+        ],
+        [
+          0.3816266655921936,
+          0.8157159686088562
+        ],
+        [
+          0.6254969835281372,
+          0.8194246292114258
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__8.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__8.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__8.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    },
+    {
+      "image": "/home/bazinga/face_serve/data/test_data/data/mask/9.png",
+      "error": null,
+      "align_score": 0.9700563549995422,
+      "original_keypoints_normalized": [
+        [
+          0.32259267568588257,
+          0.5210204124450684
+        ],
+        [
+          0.6171647906303406,
+          0.5055485963821411
+        ],
+        [
+          0.4757916033267975,
+          0.6575296521186829
+        ],
+        [
+          0.38855302333831787,
+          0.8109153509140015
+        ],
+        [
+          0.5928401947021484,
+          0.7980207204818726
+        ]
+      ],
+      "original_keypoints_pixels": [
+        [
+          40.64667892456055,
+          85.96836853027344
+        ],
+        [
+          77.76276397705078,
+          83.41551971435547
+        ],
+        [
+          59.94974136352539,
+          108.49239349365234
+        ],
+        [
+          48.957679748535156,
+          133.801025390625
+        ],
+        [
+          74.69786071777344,
+          131.6734161376953
+        ]
+      ],
+      "landmark_names": [
+        "left_eye",
+        "right_eye",
+        "nose",
+        "left_mouth",
+        "right_mouth"
+      ],
+      "aligned_keypoints_normalized": [
+        [
+          0.32278209924697876,
+          0.46643978357315063
+        ],
+        [
+          0.6757248044013977,
+          0.4689972698688507
+        ],
+        [
+          0.49601441621780396,
+          0.6404276490211487
+        ],
+        [
+          0.38086220622062683,
+          0.8174018263816833
+        ],
+        [
+          0.6257843375205994,
+          0.8165897727012634
+        ]
+      ],
+      "keypoint_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/keypoints/data__mask__9.jpg",
+      "aligned_image": "/home/bazinga/face_serve/outputs/onnx_align_recognize/aligned/data__mask__9.jpg",
+      "embedding": "/home/bazinga/face_serve/outputs/onnx_align_recognize/embeddings/data__mask__9.npy",
+      "embedding_dimension": 512,
+      "embedding_norm": 1.0
+    }
+  ]
+}

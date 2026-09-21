@@ -84,6 +84,7 @@ def create_app(
         threshold=0.3,
         sample_interval_seconds=resolved_config.video_analysis_recognition_interval_seconds,
         recognition_queue_size=resolved_config.video_analysis_recognition_queue_size,
+        max_consecutive_decode_errors=resolved_config.video_analysis_max_consecutive_decode_errors,
         download_source_enabled=resolved_config.video_analysis_download_source_enabled,
     )
     app.state.video_analysis_runner = (
