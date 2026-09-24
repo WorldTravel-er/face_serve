@@ -1,0 +1,42 @@
+[Unit]
+Description=Face Recognition API
+Documentation=file:/opt/face-serve/current/deploy/OPERATIONS.md
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=face-serve
+Group=face-serve
+WorkingDirectory=/opt/face-serve/current
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+EnvironmentFile=-/etc/face-serve/face-serve.env
+ExecStartPre=/opt/face-serve/current/.venv/bin/python /usr/libexec/face-serve/preflight.py --env-file /etc/face-serve/face-serve.env --app-dir /opt/face-serve/current --data-dir /var/lib/face-serve --log-dir /var/log/face-serve
+ExecStart=/opt/face-serve/current/.venv/bin/python -m face_api.main
+Restart=on-failure
+RestartSec=5s
+TimeoutStartSec=120s
+TimeoutStopSec=30s
+KillSignal=SIGTERM
+RuntimeDirectory=face-serve
+RuntimeDirectoryMode=0750
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+ReadWritePaths=/var/lib/face-serve /var/log/face-serve /run/face-serve
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=face-serve
+
+[Install]
+WantedBy=multi-user.target

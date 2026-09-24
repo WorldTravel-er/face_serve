@@ -39,9 +39,9 @@ def _positive_float(value: str) -> float:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run the face recognition REST API service.")
-    parser.add_argument("--host", default="0.0.0.0", help="Bind host.")
-    parser.add_argument("--port", type=int, default=8001, help="Bind port.")
-    parser.add_argument("--provider", choices=("auto", "cuda", "cpu"), default="auto", help="ONNX Runtime provider mode.")
+    parser.add_argument("--host", default=_env_value("FACE_API_HOST", "0.0.0.0"), help="Bind host.")
+    parser.add_argument("--port", type=int, default=int(_env_value("FACE_API_PORT", "8000")), help="Bind port.")
+    parser.add_argument("--provider", choices=("auto", "cuda", "cpu"), default=_env_value("FACE_API_PROVIDER", "auto"), help="ONNX Runtime provider mode.")
     parser.add_argument("--runtime", choices=("rknn", "onnx"), default=_env_value("FACE_API_RUNTIME", "rknn"), help="Inference runtime.")
     parser.add_argument("--retinaface-model", type=Path, default=Path(os.environ["FACE_API_RETINAFACE_MODEL"]) if "FACE_API_RETINAFACE_MODEL" in os.environ else None, help="Explicit detector override; otherwise select the runtime-specific model.")
     parser.add_argument("--retinaface-rknn", type=Path, default=_env_path("FACE_API_RETINAFACE_RKNN", "models/rknn/retinaface-mobilenet0.25-480x720-int8.rknn"), help="Fixed-shape RKNN RetinaFace detector.")
@@ -58,7 +58,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--retinaface-max-faces", type=_positive_int, default=int(os.environ.get("FACE_API_RETINAFACE_MAX_FACES", "1")), help="Faces processed per frame. 1 keeps only the primary face; raise it to recognize several people per frame.")
     parser.add_argument("--retinaface-min-face-score", type=float, default=float(os.environ.get("FACE_API_RETINAFACE_MIN_FACE_SCORE", "0.2")), help="Score a candidate needs before it counts as a face. Frames whose only candidates fall below it are skipped.")
     parser.add_argument("--face-selection", choices=("largest", "confidence", "continuity"), default=_env_value("FACE_API_FACE_SELECTION", "largest"), help="Which face to follow per frame: largest = closest to camera (default), confidence = strongest detection, continuity = keep the previous subject.")
-    parser.add_argument("--data-dir", type=Path, default=Path("data/face_api"), help="Subject database and image directory.")
+    parser.add_argument("--data-dir", type=Path, default=_env_path("FACE_API_DATA_DIR", "data/face_api"), help="Subject database and image directory.")
     parser.add_argument("--cvlface-recognition-onnx", type=Path, default=_env_path("FACE_API_CVLFACE_RECOGNITION_ONNX", "models/onnx/cvlface_adaface_ir50_webface4m.onnx"), help="CVLFace recognition ONNX model path. Can be overridden with FACE_API_CVLFACE_RECOGNITION_ONNX.")
     parser.add_argument("--cvlface-aligner-onnx", type=Path, default=_env_path("FACE_API_CVLFACE_ALIGNER_ONNX", "models/onnx/cvlface_dfa_mobilenet.onnx"), help="CVLFace aligner ONNX model path. Can be overridden with FACE_API_CVLFACE_ALIGNER_ONNX.")
     parser.add_argument("--cvlface-recognition-rknn", type=Path, default=_env_path("FACE_API_CVLFACE_RECOGNITION_RKNN", "models/rknn/recognition-int8.rknn"), help="CVLFace recognition RKNN model path. Can be overridden with FACE_API_CVLFACE_RECOGNITION_RKNN.")
@@ -73,9 +73,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--video-analysis-recognition-queue-size", type=_positive_int, default=int(os.environ.get("FACE_API_VIDEO_ANALYSIS_RECOGNITION_QUEUE_SIZE", "32")), help="Maximum pending nearest-track recognition jobs during long-video analysis.")
     parser.add_argument("--video-analysis-max-consecutive-decode-errors", type=_positive_int, default=int(os.environ.get("FACE_API_VIDEO_ANALYSIS_MAX_CONSECUTIVE_DECODE_ERRORS", "100")), help="Fail long-video analysis after this many consecutive corrupt packets, corrupt frames, or decode errors.")
     parser.add_argument("--video-analysis-download-source", action="store_true", help="Download HTTP/HTTPS video sources before long-video analysis.")
-    parser.add_argument("--live-stream-url", default="rtsp://192.168.3.78:8554/camera", help="Video source consumed by live recognition, such as a v4l2loopback /dev/video device, RTSP URL, video file, or camera index. Default: /dev/video10.")
+    parser.add_argument("--live-stream-url", default=_env_value("FACE_API_LIVE_STREAM_URL", "/dev/video10"), help="Video source consumed by live recognition, such as a v4l2loopback /dev/video device, RTSP URL, video file, or camera index. Can be set with FACE_API_LIVE_STREAM_URL. Default: /dev/video10.")
 
-    parser.add_argument("--live-video-stream-id", default="rtsp://192.168.3.78:8554/camera", help="video_stream_id field pushed to WebSocket clients; defaults to the live video source.")
+    parser.add_argument("--live-video-stream-id", default=_env_optional_value("FACE_API_LIVE_VIDEO_STREAM_ID"), help="video_stream_id field pushed to WebSocket clients. Can be set with FACE_API_LIVE_VIDEO_STREAM_ID; defaults to the live video source.")
     parser.add_argument("--live-match-threshold", type=float, default=0.3, help="Default live face match threshold.")
     parser.add_argument("--live-heartbeat-timeout-seconds", type=float, default=30.0, help="Seconds before closing WebSocket when client heartbeat is missing.")
     parser.add_argument("--live-detection-fps", type=float, default=30, help="Maximum live face detection FPS.")

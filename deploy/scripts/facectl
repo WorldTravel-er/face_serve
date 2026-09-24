@@ -1,0 +1,205 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+SYSTEMCTL_BIN="${FACE_SERVE_SYSTEMCTL:-systemctl}"
+JOURNALCTL_BIN="${FACE_SERVE_JOURNALCTL:-journalctl}"
+APP_ROOT="${FACE_SERVE_APP_ROOT:-/opt/face-serve}"
+CURRENT_LINK="${APP_ROOT}/current"
+RELEASES_DIR="${APP_ROOT}/releases"
+CONFIG_DIR="${FACE_SERVE_CONFIG_DIR:-/etc/face-serve}"
+ENV_FILE="${CONFIG_DIR}/face-serve.env"
+DEPENDENCIES_FILE="${CONFIG_DIR}/dependencies.conf"
+DATA_DIR="${FACE_SERVE_DATA_DIR:-/var/lib/face-serve}"
+LOG_DIR="${FACE_SERVE_LOG_DIR:-/var/log/face-serve}"
+BACKUP_DIR="${FACE_SERVE_BACKUP_DIR:-/var/backups/face-serve}"
+LIBEXEC_DIR="${FACE_SERVE_LIBEXEC_DIR:-/usr/libexec/face-serve}"
+SERVICE="face-serve.service"
+TIMER="face-serve-healthcheck.timer"
+MANUAL_HEALTH_STATE="${XDG_RUNTIME_DIR:-/tmp}/face-serve-health-${UID}"
+
+usage() {
+    printf '%s\n' "Usage: facectl {preflight|start|stop|restart|status|health|doctor|logs|backup|versions|rollback VERSION|deps ACTION|install PACKAGE|uninstall [--purge-data]}"
+}
+
+require_root() {
+    if [[ "${EUID}" -ne 0 ]]; then
+        printf 'facectl: this command requires root\n' >&2
+        exit 1
+    fi
+}
+
+python_bin() {
+    printf '%s\n' "${CURRENT_LINK}/.venv/bin/python"
+}
+
+health_url() {
+    local port
+    port="$(sed -n 's/^[[:space:]]*FACE_API_PORT[[:space:]]*=[[:space:]]*//p' "${ENV_FILE}" 2>/dev/null | tail -n 1 | tr -d "'\"")"
+    port="${port:-8000}"
+    if [[ ! "${port}" =~ ^[0-9]{1,5}$ ]] || ((port < 1 || port > 65535)); then
+        printf 'facectl: invalid FACE_API_PORT: %s\n' "${port}" >&2
+        return 1
+    fi
+    printf 'http://127.0.0.1:%s/readyz\n' "${port}"
+}
+
+read_dependencies() {
+    local line value
+    [[ -f "${DEPENDENCIES_FILE}" ]] || return 0
+    line="$(sed -n 's/^[[:space:]]*LOCAL_DEPENDENCY_SERVICES[[:space:]]*=[[:space:]]*//p' "${DEPENDENCIES_FILE}" | tail -n 1)"
+    for value in ${line}; do
+        if [[ ! "${value}" =~ ^[A-Za-z0-9_.@-]+\.service$ ]]; then
+            printf 'facectl: invalid dependency service in %s: %s\n' "${DEPENDENCIES_FILE}" "${value}" >&2
+            exit 1
+        fi
+        printf '%s\n' "${value}"
+    done
+}
+
+start_dependencies() {
+    local service
+    while IFS= read -r service; do
+        [[ -n "${service}" ]] || continue
+        "${SYSTEMCTL_BIN}" start "${service}"
+    done < <(read_dependencies)
+}
+
+wait_until_ready() {
+    local attempts="${1:-30}"
+    local i
+    for ((i = 1; i <= attempts; i++)); do
+        if /usr/bin/python3 "${LIBEXEC_DIR}/healthcheck.py" --url "$(health_url)" --state-file "${MANUAL_HEALTH_STATE}" >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 2
+    done
+    return 1
+}
+
+rollback_release() {
+    local version="$1" target previous temp_link
+    [[ "${version}" =~ ^[A-Za-z0-9._-]+$ ]] || { printf 'facectl: invalid version\n' >&2; exit 2; }
+    target="${RELEASES_DIR}/${version}"
+    [[ -d "${target}" ]] || { printf 'facectl: release not found: %s\n' "${target}" >&2; exit 2; }
+    previous="$(readlink -f "${CURRENT_LINK}" || true)"
+    [[ "${previous}" != "${target}" ]] || { printf 'already running %s\n' "${version}"; return 0; }
+
+    "${SYSTEMCTL_BIN}" stop "${SERVICE}"
+    temp_link="${APP_ROOT}/.current.$$.tmp"
+    ln -s "${target}" "${temp_link}"
+    mv -Tf "${temp_link}" "${CURRENT_LINK}"
+    if "${SYSTEMCTL_BIN}" start "${SERVICE}" && wait_until_ready 30; then
+        printf 'rolled back to %s\n' "${version}"
+        return 0
+    fi
+
+    printf 'rollback target failed readiness; restoring %s\n' "${previous}" >&2
+    if [[ -n "${previous}" && -d "${previous}" ]]; then
+        temp_link="${APP_ROOT}/.current.$$.restore"
+        ln -s "${previous}" "${temp_link}"
+        mv -Tf "${temp_link}" "${CURRENT_LINK}"
+        "${SYSTEMCTL_BIN}" restart "${SERVICE}" || true
+    fi
+    return 1
+}
+
+deps_action() {
+    local action="$1" service
+    case "${action}" in
+        start|restart)
+            require_root
+            while IFS= read -r service; do
+                [[ -n "${service}" ]] || continue
+                "${SYSTEMCTL_BIN}" "${action}" "${service}"
+            done < <(read_dependencies)
+            ;;
+        stop)
+            require_root
+            "${SYSTEMCTL_BIN}" stop "${SERVICE}"
+            while IFS= read -r service; do
+                [[ -n "${service}" ]] || continue
+                "${SYSTEMCTL_BIN}" stop "${service}"
+            done < <(read_dependencies)
+            ;;
+        status)
+            while IFS= read -r service; do
+                [[ -n "${service}" ]] || continue
+                "${SYSTEMCTL_BIN}" is-active "${service}" || true
+            done < <(read_dependencies)
+            ;;
+        *)
+            printf 'facectl: deps action must be start, stop, restart, or status\n' >&2
+            exit 2
+            ;;
+    esac
+}
+
+command_name="${1:-}"
+shift || true
+case "${command_name}" in
+    preflight)
+        exec "$(python_bin)" "${LIBEXEC_DIR}/preflight.py" --env-file "${ENV_FILE}" --app-dir "${CURRENT_LINK}" --data-dir "${DATA_DIR}" --log-dir "${LOG_DIR}" "$@"
+        ;;
+    doctor)
+        exec "$(python_bin)" "${LIBEXEC_DIR}/preflight.py" --env-file "${ENV_FILE}" --app-dir "${CURRENT_LINK}" --data-dir "${DATA_DIR}" --log-dir "${LOG_DIR}" --json "$@"
+        ;;
+    start)
+        require_root
+        start_dependencies
+        "${SYSTEMCTL_BIN}" enable --now "${SERVICE}" "${TIMER}"
+        ;;
+    stop)
+        require_root
+        "${SYSTEMCTL_BIN}" stop "${TIMER}" "${SERVICE}"
+        ;;
+    restart)
+        require_root
+        start_dependencies
+        "${SYSTEMCTL_BIN}" restart "${SERVICE}"
+        ;;
+    status)
+        "${SYSTEMCTL_BIN}" status --no-pager "${SERVICE}" || true
+        /usr/bin/python3 "${LIBEXEC_DIR}/healthcheck.py" --url "$(health_url)" --state-file "${MANUAL_HEALTH_STATE}" || true
+        ;;
+    health)
+        exec /usr/bin/python3 "${LIBEXEC_DIR}/healthcheck.py" --url "$(health_url)" --state-file "${MANUAL_HEALTH_STATE}"
+        ;;
+    logs)
+        exec "${JOURNALCTL_BIN}" -u "${SERVICE}" -f --no-pager "$@"
+        ;;
+    backup)
+        require_root
+        exec /usr/bin/python3 "${LIBEXEC_DIR}/backup.py" --data-dir "${DATA_DIR}" --backup-root "${BACKUP_DIR}" "$@"
+        ;;
+    versions)
+        current="$(readlink -f "${CURRENT_LINK}" || true)"
+        for path in "${RELEASES_DIR}"/*; do
+            [[ -d "${path}" ]] || continue
+            marker=""
+            [[ "${path}" == "${current}" ]] && marker=" *"
+            printf '%s%s\n' "$(basename "${path}")" "${marker}"
+        done
+        ;;
+    rollback)
+        require_root
+        [[ "$#" -eq 1 ]] || { usage; exit 2; }
+        rollback_release "$1"
+        ;;
+    deps)
+        [[ "$#" -eq 1 ]] || { usage; exit 2; }
+        deps_action "$1"
+        ;;
+    install)
+        require_root
+        [[ "$#" -eq 1 ]] || { usage; exit 2; }
+        exec "${LIBEXEC_DIR}/install.sh" "$1"
+        ;;
+    uninstall)
+        require_root
+        exec "${LIBEXEC_DIR}/uninstall.sh" "$@"
+        ;;
+    *)
+        usage
+        exit 2
+        ;;
+esac

@@ -1,0 +1,4 @@
+[Service]
+SupplementaryGroups=video
+DevicePolicy=closed
+DeviceAllow=/dev/video10 rw

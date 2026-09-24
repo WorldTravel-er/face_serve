@@ -1,0 +1,17 @@
+[Unit]
+Description=Face Recognition API readiness supervisor
+After=face-serve.service
+
+[Service]
+Type=oneshot
+Environment=FACE_API_PORT=8000
+EnvironmentFile=-/etc/face-serve/face-serve.env
+ExecStart=/usr/bin/python3 /usr/libexec/face-serve/healthcheck.py --state-file /run/face-serve-health/health-failures --failure-threshold 3 --restart-service face-serve.service --supervisor
+RuntimeDirectory=face-serve-health
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=yes
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/run/face-serve-health

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, status
+from fastapi.responses import JSONResponse
 
 from face_api.rest.responses import api_response
 # 创建路由容器
@@ -12,8 +13,8 @@ def healthz() -> dict:
     return api_response({"status": "ok"})
 
 # 定义ready检查接口，检查程序是否能工作
-@router.get("/readyz")
-def readyz(request: Request) -> dict:
+@router.get("/readyz", response_model=None)
+def readyz(request: Request) -> dict | JSONResponse:
     # 获取存储服务
     store = request.app.state.store
     # 获取识别服务
@@ -28,4 +29,7 @@ def readyz(request: Request) -> dict:
         subjects = 0
         runtime = {"error": str(exc)}
         ready = False
-    return api_response({"ready": ready, "subjects": subjects, "runtime": runtime})
+    payload = api_response({"ready": ready, "subjects": subjects, "runtime": runtime})
+    if not ready:
+        return JSONResponse(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, content=payload)
+    return payload

@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Face Recognition API readiness checks
+
+[Timer]
+OnBootSec=90s
+OnUnitActiveSec=30s
+AccuracySec=5s
+Unit=face-serve-healthcheck.service
+
+[Install]
+WantedBy=timers.target
